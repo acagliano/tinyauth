@@ -55,10 +55,9 @@ if (isset($_POST["register-reg"])) {
 	$url = 'https://www.google.com/recaptcha/api/siteverify?' . http_build_query([
 		'secret' => $_ENV['GRECAPTCHA_SECRET_KEY'],
 		'response' => $_POST['g-recaptcha-response'],
-		'remoteip' => $_SERVER['REMOTE_ADDR'],
 	]);
     
-    $gre_api_call = file_get_contents($url);
+    $gre_api_call = file_get_contents(filter_var($url, FILTER_SANITIZE_URL));
     $gre_api_response = json_decode($gre_api_call);
     if ($gre_api_response->success) {
         
