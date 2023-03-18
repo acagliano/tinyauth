@@ -11,9 +11,9 @@ $response = array("success" => false, "error" => false);
 $pubkey = openssl_get_publickey(file_get_contents("tools/pubkey.ec.pem"));
 
 if(array_key_exists("user", $_GET) && array_key_exists("token", $_GET)) {
-    $SQL_HOST="localhost";
-    $SQL_USER="tinyauth";
-    $SQL_DB="tinyauth";
+	$SQL_HOST="localhost";
+	$SQL_USER=$_ENV['SQL_USER'];
+	$SQL_DB=$_ENV['SQL_DB'];
     $SQL_PW=$_ENV['SQL_PASSWD'];
 
     $conn = mysqli_connect($SQL_HOST, $SQL_USER, $SQL_PW, $SQL_DB);

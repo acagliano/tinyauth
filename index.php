@@ -11,8 +11,8 @@ $google2fa = new Google2FA();
 
 
 $SQL_HOST="localhost";
-$SQL_USER="tinyauth";
-$SQL_DB="tinyauth";
+$SQL_USER=$_ENV['SQL_USER'];
+$SQL_DB=$_ENV['SQL_DB'];
 $SQL_PW=$_ENV['SQL_PASSWD'];
 $errors = array();
 
