@@ -1,0 +1,78 @@
+ html,body,div,img {margin:0; padding:0; outline:0;}
+            html,body {width:100vw; height:100vh;}
+            body {display:flex; background:#333;  font-family: 'Nova Flat'; font-size:1.5vmax; flex-wrap:wrap; }
+            #navigation {position:-webkit-sticky; position:sticky; top:0; display:flex; flex:0 0 15%; flex-direction:column; width:15vw; background:rgba(192, 192, 192, .9); font-size:130%;}
+            .nav-item>a {width:100%; height:100%; display:block; margin:0; padding:0; color:inherit; text-decoration:none;}
+            .nav-item{cursor:pointer; cursor:hand; padding:2% 0; font-size:90%;}
+            .nav-item:hover{background:rgba(0,0,0,.1);}
+            #icon {background:rgba(128, 128, 128, .8); width:100%; height:auto!important; flex:0;}
+            #content {display:flex; flex:1; color:#e0ffff; line-height:1.5; flex-direction:column; height:100vh;}
+            #content>p, #content>h3, #content>ul {margin:1% 5%;}
+            #content>ul {background:rgba(240, 255, 255, .15);}
+            li {margin:5px 3%; font-size:90%;}
+            .emph {font-weight:bold;}
+            .subscr{ font-style:italic; font-size:80%;}
+            #buttons {
+				color:white;
+				flex-basis:100%;
+				height:auto;
+                display:flex;
+                flex-direction:row;
+                position:sticky;
+                justify-content:flex-end;
+                bottom:0; right:5%;
+            }
+            #space {flex:5;}
+            #copyright {align-self:center; font-size:80%; text-align:left; color:white;}
+
+            #docs-button,#client-download {
+                cursor:pointer; cursor:hand;
+                text-align:center;
+                width:auto; padding:1%;
+                margin:0 5px;
+                min-width:200px;
+                background:rgba(128, 128, 128, .6);
+                border:3px outset rgba(128, 128, 128, .5);
+            }
+            #docs-button:hover, #client-download:hover{
+                border:2px inset rgba(128, 128, 128, .5);
+            }
+            #docs-button>a,#client-download>a {display:block; width:100%; height:100%; margin:0; padding:0; outline:0; color:inherit; text-decoration:none;}
+            details:focus,summary:focus{outline:none;}
+            details > summary {list-style:none;}
+            details > summary::-webkit-details-marker {display: none;}
+            .decor {width:100%; height:1%; margin:0; padding:0; outline:0; border:0; text-align:center; background:rgba(255, 255, 255, .4);}
+            
+            #socials {
+                align-self:flex-end;
+                color:white;
+                display:flex;
+                width:100%;
+                text-align:center;
+                font-weight:900;
+                justify-content:center;
+                align-items:stretch;
+            }
+            .social-item {
+                flex:1; padding:5px 0; cursor:pointer; cursor:hand;
+                text-align:center;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:120%;
+            }
+            .social-item, .social-item * {
+                align-items:center;
+                justify-content:center;
+            }
+            
+            .social-item>a {text-decoration:none; color:inherit; display:block; width:100%; height:100%;}
+            .social-item:hover {opacity:.7;}
+            
+            @media screen and (max-width: 768px){
+                body{font-size:1.75vmax;}
+                #client-download {display:none;}
+            }
+            @media screen and (min-width: 1200px) {
+                body {font-size: 18px;
+            }

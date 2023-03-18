@@ -1,0 +1,5 @@
+Please ask your administrator.
+ERROR: Referenced sniff "Security.BadFunctions.Asserts" does not exist
+
+Run "phpcs --help" for usage information
+

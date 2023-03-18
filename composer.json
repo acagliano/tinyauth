@@ -1,0 +1,10 @@
+{
+    "require": {
+        "vlucas/phpdotenv": "^5.5",
+        "pragmarx/google2fa": "^8.0",
+        "defuse/php-encryption": "^2.3"
+    },
+    "require-dev": {
+        "pheromone/phpcs-security-audit": "^2.0"
+    }
+}
