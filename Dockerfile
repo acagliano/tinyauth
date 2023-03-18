@@ -1,5 +1,5 @@
 # Use an official Ubuntu as a parent image
-FROM ubuntu:latest
+FROM ubuntu:rolling
 
 # Set the timezone and disable interactive prompts
 ENV TZ=America/New_York \
