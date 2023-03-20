@@ -39,7 +39,7 @@ if(isset($_POST["gen_key"])){
 if(isset($_POST["delete_account"])){
 	$conn = mysqli_connect($SQL_HOST, $SQL_USER, $SQL_PW, $SQL_DB);
 	$stmt_delete_row = $conn->prepare('delete from cred where username = ?');
-	$stmt_delete_row->bind_param('s', $_SESSION["user"]);
+	$stmt_delete_row->bind_param('s', $_SESSION["username"]);
 	$stmt_delete_row->execute();
 	session_destroy();
 	unset($_SESSION["username"]);

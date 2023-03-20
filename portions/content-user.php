@@ -1,5 +1,21 @@
-<div style="margin:20px; font-size:90%;">
-	<h3>For End Users</h3>
+
+	<div id="recent-logins" class="user-widget">
+		<div>Recent Keyfile Authentication Attempts [Last 30 days]</div>
+		<?php
+			$json_all = json_decode(file_get_contents("logs/keychecks.log"), true);
+			foreach($json_all as $line){
+				if ($line["user"]==$_SESSION["username"]){
+					$logdate = new \DateTime($line["timestamp"]);
+					$now = new \DateTime();
+					if($logdate->diff($now)->days <= 30) {
+						echo $line["timestamp"]."] User: ".$line["user"].", Host: ".$line["remote-ip"].", Status: ".$line["status"]."<br />";
+					}
+				}
+			}
+		?>
+	</div>
+<!--
+<h3>For End Users</h3>
 	<p>TInyAuth allows for online calculator games or other resources to facilitate credential-less authentication by querying our API to validate a token issued by this service. End users may download a keyfile containing their account ID (username) and a digitally-signed authentication token that both identifies the user and authenticates the issuing host.</p>
 	<p><span style="background:silver; color:black;">Refresh User Token</span> in the sidebar can be used to generate a new authentication token for your account, which also revokes all keyfiles issued for this account.<br />
 		<span style="background:silver; color:black;">Download Keyfile</span> creates an (automatic) download of a file &quot;TInyAuthKF.8xv&quot; that can be used as a single-sign-on key for any calculator services that support TInyAuth.</p>
@@ -22,4 +38,5 @@ response = requests.get(
 )
 print(f"{response.json}")
 </pre></p>
-</div>
+-->
+

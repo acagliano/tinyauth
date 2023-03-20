@@ -40,9 +40,9 @@ if(isset($_POST["regen_token"])){
 	<input type="checkbox" name="en2fa" /> Enable 2FA<br />
 	<input type="submit" name="save_config" value="Save Settings" />
 	<hr />
-	Current Token Generated:<br /> <?php echo $_SESSION["token_creation_date"]; ?><br />
-	<input type="submit" name="regen_token" value="Refresh User Token" />
-	<input type="submit" name="gen_key" value="Download Keyfile" />
+	<span style="font-size:18px;">Current Token Generated:</span><br /> <?php echo $_SESSION["token_creation_date"]; ?><br />
+	<input type="submit" name="regen_token" value="Refresh Token" onclick="return  confirm('This action will immediately revoke all TI-84+ CE keyfiles issued to this point. Are you sure you want to proceed?')" />
+	<input type="submit" name="gen_key" value="Generate Keyfile" />
 <?php
 echo "<span class=\"errors\">";
 foreach($errors as $e){
@@ -52,6 +52,6 @@ foreach($errors as $e){
 echo "</span>";
 ?>
 	<hr />
-	<input type="submit" name="delete_account" value="Delete Account" onclick="return  confirm('Are you sure you want to do this?')" />
+	<input type="submit" style="background:darkred;" name="delete_account" value="Delete Account" onclick="return  confirm('This action cannot be reversed. Are you sure you want to do this?')" />
 </form>
 

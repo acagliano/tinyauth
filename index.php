@@ -147,21 +147,26 @@ function refresh_session_data($user, $conn)
                 margin:15% auto;
                 flex:0;
             }
-            #login, #logout, #config {width:70%; margin:auto; flex:0;}
+            #login, #logout, #config {width:70%; margin:auto; padding:0; flex:0; text-align:center;}
 #login input[type=text],#login input[type=password], #login input[type=submit] {
     -webkit-border-radius:10px; -moz-border-radius:10px; border-radius:10px;
     width:100%; height:30px;
     margin:2% 0;
             }
 #logout input[type=text],#logout input[type=password], #logout input[type=submit] {
+	display:block;
     -webkit-border-radius:10px; -moz-border-radius:10px; border-radius:10px;
-    width:100%; height:30px;
-    margin:2% 0;
+	width:80%; height:40px;
+    margin:2% auto;
 }
 #config input[type=text],#config input[type=password], #config input[type=submit] {
+display:block;
 -webkit-border-radius:10px; -moz-border-radius:10px; border-radius:10px;
 width:100%; height:30px;
-margin:2% 0;
+margin:2% auto;
+}
+#config input[type=submit] {
+width:80%; height:20px;
 }
 
             #login input[type=text],#login input[type=password]{
@@ -208,6 +213,7 @@ font-size:18px;
 height:30px;
 border-radius:5px;
 }
+	
             #login p {color:rgb(188,212,230); font-size:20px; margin:5px 0; text-align:center;}
 #logout p {color:rgb(188,212,230); font-size:20px; margin:5px 0; text-align:center;}
 #register p {color:rgb(188,212,230); font-size:20px; margin:5px 0; text-align:center;}
@@ -280,6 +286,15 @@ input[type=submit]:hover {opacity:0.7;}
             #main p {margin:10px;}
             #banner {position:absolute; bottom:0; left:0; background:darkred; color:white; width:100%; padding:5px 0;}
             .note, .errors {color:red; font-weight:bold;}
+.user-widget {background:rgba(0,0,0,.5);}
+#recent-logins {font-family:monospace; font-size:12px; width:100%; height:30%; overflow:auto; }
+#recent-logins div:first-child {
+	width:100%; height:auto;
+	font-size:15px; font-weight:bold;
+	padding:3px 0; margin-bottom:5px;
+	background: rgba(70,130,180,.6);
+	color:white;
+}
         </style>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
@@ -298,9 +313,8 @@ input[type=submit]:hover {opacity:0.7;}
             ?>
             <br />
             <p style="width:100%; text-align:center; color:rgba(255,255,255,.8);">
-                <span style="font-weight:bold; font-size:120%;">Legal Info</span><br />
-                &copy; Anthony Cagliano, 2023-<?php echo htmlspecialchars(date("Y")); ?><br />
-                <a href="portions/privacy.php" style="color:inherit;">Privacy Policy</a>
+                <a href="portions/privacy.php" style="color:inherit;">Privacy Policy</a><br />
+				&copy; Anthony Cagliano, 2023-<?php echo htmlspecialchars(date("Y")); ?><br />
             </p>
         </div>
         <div id="main">
