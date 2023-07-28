@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="template.css" />
         <style>
+
             #content>div{
                 background:rgba(0,0,0,.15);
                 font-size:14px;
@@ -20,6 +21,7 @@
             #content>#content-exp-devs {position:absolute; right:2%; bottom:10%; width:28%;}
             #content>#content-exp-analytics {position:absolute; right:2%; top:5%; width:18%;}
         </style>
+        <script src="scripts/toggle_compliances.js"></script>
     </head>
     <body>
         <div id="header">
@@ -28,11 +30,12 @@
             <div id="infoline-nav">
                 <div id="infoline">• TI-84+ CE AuthKey Issuing &amp; Authentication Service •</div>
                 <div id="navigation">
-                    <div class="navitem"><a href="portions/tos.php">API Documentation</a></div>
-                    <div class="navitem"><a href="portions/tos.php">Legal Notices</a></div>
                     <div id="login-button" class="navitem"><a href="account.php">
                         <img src="myaccount-button.png" alt="my account" />
                     </a></div>
+                    <div class="navitem"><a href="portions/document.php">Documentation</a></div>
+                    <div class="navitem"><a href="portions/legal.php">Legal Notices</a></div>
+                    <div class="navitem" onclick="show_compliances()">Compliance</div>
                 </div>
             </div>
         </div>
@@ -40,14 +43,14 @@
             <img id="content-demo" src="demo-img.png" alt="demo" />
             <div id="content-exp-keygen">
                 <div class="title">• Secure Keygen</div>
-                <p>Generate a keyfile signed using a secure elliptic curve algorithm to send to your TI-84+ CE. Any service that supports TInyAuth will extract credentials from the key silently. Keyfiles may be passphrase-encrypted for additional security.</p>
+                <p>Generate a keyfile containing an access token derived from a secret specific to your user account and securely signed with an elliptic curve algorithm using a master key to prevent forgery. Keyfiles may be encrypted with a secondary passphrase for additional security.</p>
             </div>
             <div id="content-exp-easy">
-                <div class="title">• Easy to Use</div>
+                <div class="title">• Easy for End Users</div>
                 <p>Connect to any game (or other) service for the TI-84+ CE that supports TInyAuth and your credentials are extracted from your keyfile with no user input required.</p>
             </div>
             <div id="content-exp-devs">
-                <div class="title">• Devs</div>
+                <div class="title">• Easy for Developers</div>
                 <p>Service developers can use <a href="https://acagliano.github.io/cryptx/">CryptX</a> to extract credentials on the client and a simple GET request on the server to authenticate user credentials with TInyAuth.</p>
             </div>
             <div id="content-exp-analytics">
@@ -55,5 +58,6 @@
                 <p>From the My Account page, view a comprehensive log of all sign-in attempts involving your key(s) including querying host, queries per host, and return status of each request. You can also block a host from using your keys completely, which causes authentication from that host to always fail whether the key is valid or not.</p>
             </div>
         </div>
+        <?php include("portions/compliance.php"); ?>
     </body>
 </html>
