@@ -20,6 +20,10 @@
             #content>#content-exp-easy {position:absolute; right:50%; bottom:10%; width:45%;}
             #content>#content-exp-devs {position:absolute; right:2%; bottom:10%; width:28%;}
             #content>#content-exp-analytics {position:absolute; right:2%; top:5%; width:18%;}
+            @media only screen and (max-width: 600px) {
+                #content>#content-exp-keygen, #content>#content-exp-easy, #content>#content-exp-devs, #content>#content-exp-analytics {position:static; width:100%; margin:1% 0;}
+                #content>#content-demo {display:none;}
+            }
         </style>
         <script src="scripts/toggle_compliances.js"></script>
     </head>

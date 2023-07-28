@@ -161,3 +161,45 @@
  #compliances>p {
      margin: 2%;
  }
+
+ @media only screen and (max-width: 600px) {
+     body {
+         overflow: auto;
+         scroll-behavior: smooth;
+     }
+
+     #header {
+         height: auto;
+         display: block;
+     }
+
+     #ta-icon {
+         display: none;
+     }
+
+     #login-button {
+         display: none;
+     }
+
+     #navigation,
+     #title {
+         width: 100%;
+     }
+
+     #infoline-nav {
+         width: 100%;
+     }
+
+     #infoline {
+         width: 100%;
+         font-size: 12px;
+         border-bottom: 1px solid black;
+     }
+
+     #compliances {
+         width: 90%;
+         height: 70vh;
+         left: 4%;
+         top: 15%;
+     }
+ }
