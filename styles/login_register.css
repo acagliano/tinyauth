@@ -1,0 +1,21 @@
+#forms {
+    width: 100%;
+    margin: 5% auto;
+    display: flex;
+    justify-content: space-around;
+}
+
+form {
+    width: 35%;
+    background: rgba(0, 0, 0, .5);
+    padding: 2%;
+    color: white;
+}
+
+form input:not([type=submit]) {
+    outline: 2px solid goldenrod;
+    width: 95%;
+    height: 25px;
+    font-size: 16px;
+    margin: 5px 0;
+}

@@ -1,0 +1,9 @@
+#dashboard {
+    width: 98%;
+    margin: auto;
+    color: white;
+}
+
+#login-button {
+    display: none;
+}

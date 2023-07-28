@@ -4,7 +4,7 @@
         <title>TInyAuth | TI-84+ CE Credentials Grant and Authentication</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="template.css" />
+        <link rel="stylesheet" href="styles/template.css" />
         <style>
 
             #content>div{
@@ -28,21 +28,7 @@
         <script src="scripts/toggle_compliances.js"></script>
     </head>
     <body>
-        <div id="header">
-            <div id="ta-icon"><img id="ta-img" src="ta-logo.png" /></div>
-            <div id="title">TInyAuth</div>
-            <div id="infoline-nav">
-                <div id="infoline">• TI-84+ CE AuthKey Issuing &amp; Authentication Service •</div>
-                <div id="navigation">
-                    <div id="login-button" class="navitem"><a href="account.php">
-                        <img src="myaccount-button.png" alt="my account" />
-                    </a></div>
-                    <div class="navitem"><a href="portions/document.php">Documentation</a></div>
-                    <div class="navitem"><a href="portions/legal.php">Legal Notices</a></div>
-                    <div class="navitem" onclick="show_compliances()">Compliance</div>
-                </div>
-            </div>
-        </div>
+        <?php include_once("portions/header.php"); ?>
         <div id="content">
             <img id="content-demo" src="demo-img.png" alt="demo" />
             <div id="content-exp-keygen">
@@ -62,6 +48,6 @@
                 <p>From the My Account page, view a comprehensive log of all sign-in attempts involving your key(s) including querying host, queries per host, and return status of each request. You can also block a host from using your keys completely, which causes authentication from that host to always fail whether the key is valid or not.</p>
             </div>
         </div>
-        <?php include("portions/compliance.php"); ?>
+        <?php include_once("portions/compliance.php"); ?>
     </body>
 </html>
