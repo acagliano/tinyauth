@@ -9,7 +9,7 @@
 
             #content>div{
                 background:rgba(0,0,0,.15);
-                font-size:14px;
+                font-size:16px;
                 padding:5px;
                 color:white;
             }
