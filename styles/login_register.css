@@ -19,3 +19,11 @@ form input:not([type=submit]) {
     font-size: 16px;
     margin: 5px 0;
 }
+
+#login-button {
+    display: none;
+}
+
+#home-button {
+    display: block;
+}

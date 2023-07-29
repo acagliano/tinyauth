@@ -2,8 +2,80 @@
     width: 98%;
     margin: auto;
     color: white;
+    display: flex;
 }
 
 #login-button {
     display: none;
+}
+
+#home-button {
+    display: block;
+}
+
+#logout {
+    margin: 0 5%;
+}
+
+#welcome-msg {
+    display: flex;
+    width: auto;
+}
+
+#details {
+    width: 40%;
+    background: rgba(0, 0, 0, .5);
+    padding: 5px;
+}
+
+#more-details {
+    width: 60%;
+    padding: 5px 10px;
+}
+
+#details>p {
+    margin: 10px;
+}
+
+#update {
+    width: 95%;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, .25);
+    padding: 10px;
+}
+
+#danger {
+    width: 95%;
+    margin: 0 auto;
+    background: rgba(255, 0, 0, .5);
+    padding: 10px;
+}
+
+#danger input,
+#update input {
+    width: 90%;
+}
+
+form h4 {
+    margin: 0;
+}
+
+#secret-ts-hover:hover #secret-ts-exp {
+    display: block;
+}
+
+#secret-ts-exp {
+    display: none;
+    position: absolute;
+    right: -25vw;
+    top: 0px;
+    width: 25vw;
+    height: auto;
+    border: 2px solid goldenrod;
+    background: rgba(0, 0, 0, .75);
+    padding: 5px;
+}
+
+#issue-key {
+    margin: 0 5px;
 }

@@ -48,6 +48,7 @@
         }
     }
     if(isset($_POST["l_submit"])){
+        $l_errors = array();
         $user = $_POST["l_username"];
         $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
         if (!$conn->connect_error) {
@@ -82,19 +83,29 @@
 
 <div id="forms">
 
-    <form id="form-register" action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
+    <form id="form-register" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
         <p>New to TInyAuth? Register here to get started!</p>
         <input type="text" name="r_username" required />
         <input type="password" name="r_password" required />
         <input type="email" name="r_email" required />
         <div class="g-recaptcha" data-sitekey="6Le-9pAkAAAAAMIK25zYXLP9-f2ade_c3Zg_XeNz"></div>
         <input type="submit" value="Register" name="r_submit" />
+        <?php
+            foreach($r_errors as $error){
+                echo $error."<br />";
+            }
+        ?>
     </form>
 
-     <form id="form-login" action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
+     <form id="form-login" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
         <p>Already have an account? Sign in here to access your dashboard!</p>
         <input type="text" name="l_username" required />
         <input type="password" name="l_password" required />
         <input type="submit" value="Login" name="l_submit" />
+        <?php
+            foreach($l_errors as $error){
+                echo $error."<br />";
+            }
+        ?>
     </form>
 </div>

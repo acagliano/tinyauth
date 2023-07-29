@@ -4,6 +4,9 @@
             <div id="infoline-nav">
                 <div id="infoline">• TI-84+ CE AuthKey Issuing &amp; Authentication Service •</div>
                 <div id="navigation">
+                    <div id="home-button" class="navitem"><a href="/">
+                        <div class="w3-blue-gray w3-xlarge"><i class="fa fa-home"></i> Home</div>
+                    </a></div>
                     <div id="login-button" class="navitem"><a href="account.php">
                         <img src="myaccount-button.png" alt="my account" />
                     </a></div>

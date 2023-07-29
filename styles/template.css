@@ -1,7 +1,7 @@
  @font-face {
      font-family: "Share Tech";
      src:
-         url("fonts/sharetech/ShareTechMono-Regular.ttf") format("truetype")
+         url("/fonts/sharetech/ShareTechMono-Regular.ttf") format("truetype")
  }
 
  a {
@@ -50,6 +50,10 @@
  #ta-icon {
      width: auto;
      flex: 0;
+ }
+
+ #home-button {
+     display: none;
  }
 
  #title {
@@ -109,8 +113,12 @@
      color: inherit;
  }
 
- .navitem:not(#login-button):hover {
+ .navitem:not(#login-button, #home-button):hover {
      background: linear-gradient(to top, rgba(0, 0, 255, .5) 0%, rgba(255, 255, 255, 1) 12%);
+ }
+
+ #home-button div {
+     padding: 5px;
  }
 
  #login-button img {
@@ -118,7 +126,8 @@
      height: auto !important;
  }
 
- #login-button:hover {
+ #login-button:hover,
+ #home-button:hover {
      opacity: 0.7;
  }
 
