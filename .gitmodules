@@ -1,0 +1,3 @@
+[submodule "ti_vars_lib"]
+	path = ti_vars_lib
+	url = https://github.com/adriweb/tivars_lib.git
