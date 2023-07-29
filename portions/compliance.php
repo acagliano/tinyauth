@@ -4,6 +4,6 @@
     CIS Server Level 1: <span style="color:green; font-weight:bold;">90.54%</span><br />
     CIS Server Level 2: <span style="color:green; font-weight:bold;">82.31%</span><br />
     <br />
-    In addition the backend code powering the key generation and authentication has been seperately audited and RESULT PENDING.
+    In addition the backend code powering the key generation and authentication has been seperately audited using <a href="https://snyk.io">Snyk</a> and shows no code vulnerabilities.
     </p>
 </div>
