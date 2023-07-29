@@ -68,17 +68,6 @@
             $l_errors[] = "Database connection failed.";
         }
     }
-
-    function load_user($conn, $user){
-        $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE user=?");
-        $load_user_stmt->bind_param("s", $user);
-        $load_user_stmt->execute();
-        $result = $load_user_stmt->get_result();
-        $row = $result->fetch_assoc();
-        foreach($row as $key=>$value){
-            $_SESSION[$key] = $value;
-        }
-    }
 ?>
 
 <div id="forms">

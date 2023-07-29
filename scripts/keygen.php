@@ -62,8 +62,8 @@
                 ob_clean();
                 flush();
                 echo file_get_contents($tfile.".8xv");
-                exit;
                 unlink($tfile.".8xv");
+                exit();
             } else {
                 $kf_errors[] = "Error creating download.";
             }

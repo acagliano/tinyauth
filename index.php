@@ -41,7 +41,7 @@
             </div>
             <div id="content-exp-devs">
                 <div class="title">• Easy for Developers</div>
-                <p>Service developers can use <a href="https://acagliano.github.io/cryptx/">CryptX</a> to extract credentials on the client and a simple GET request on the server to authenticate user credentials with TInyAuth.</p>
+                <p>Service developers can use <a href="https://acagliano.github.io/cryptx/">CryptX</a> to extract credentials on the client and a simple POST request on the server to authenticate user credentials with TInyAuth.</p>
             </div>
             <div id="content-exp-analytics">
                 <div class="title">• Key Usage Analytics</div>

@@ -9,6 +9,74 @@
         unset($_SESSION);
         header("Refresh:0");
     }
+
+    if(isset($_POST["update_info"])){
+        $n_errors = array();
+        if(password_verify($_POST["n_verify"], $_SESSION["password"])){
+            $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
+            if(isset($_POST["n_email"]) && $_POST["n_email"] != ""){
+                $email = filter_var($_POST["n_email"], FILTER_VALIDATE_EMAIL);
+                if($email){
+                    $email_update_stmt = $conn->prepare("UPDATE credentials SET email=? WHERE id=?");
+                    $email_update_stmt->bind_param("si", $email, $_SESSION["id"]);
+                    $status = $email_update_stmt->execute();
+                    if ($status === false) {
+                        $n_errors[] = "Error updating email address.";
+                    } else {
+                        $n_errors[] = "Email successfully updated!";
+                    }
+                } else {
+                    $n_errors[] = "Input email invalid.";
+                }
+
+            }
+            if(isset($_POST["n_password"]) && $_POST["n_password"] != ""){
+                $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
+                $passwd = password_hash($_POST["n_password"], PASSWORD_DEFAULT);
+                $passwd_update_stmt = $conn->prepare("UPDATE credentials SET password=? WHERE id=?");
+                $passwd_update_stmt->bind_param("si", $passwd, $_SESSION["id"]);
+                $status = $passwd_update_stmt->execute();
+                if ($status === false) {
+                    $n_errors[] = "Error updating email address.";
+                } else {
+                    $n_errors[] = "Email successfully updated!";
+                }
+            }
+        } else {
+            $n_errors[] = "Invalid password provided.";
+        }
+        load_user($conn, $_SESSION["user"]);
+        $conn->close();
+    }
+
+    if(isset($_POST["refresh_token"])){
+        $secret = random_bytes(64);
+        $timestamp = date("Y-m-d H:i:s");
+        $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
+        $secret_update_stmt = $conn->prepare("UPDATE credentials SET secret=?,secret_creation_ts=? WHERE id=?");
+        $secret_update_stmt->bind_param("ssi", $secret, $timestamp, $_SESSION["id"]);
+        $status = $secret_update_stmt->execute();
+        if ($status === false) {
+            echo "<script>alert(\"Error writing new secret. If this issue persists, please contact system administrator.\");</script>";
+        } else {
+            load_user($conn, $_SESSION["user"]);
+        }
+        $conn->close();
+    }
+    if(isset($_POST["delete_account"])){
+        $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
+        $delete_stmt = $conn->prepare("DELETE FROM credentials WHERE id=?");
+        $delete_stmt->bind_param("i", $_SESSION["id"]);
+        $status = $delete_stmt->execute();
+        if ($status===false) {
+            echo "<script>alert(\"Error deleting account. If this issue persists, please contact system administrator.\");</script>";
+        } else {
+            session_destroy();
+            $_SESSION["user"] = "";
+            header("Refresh:0");
+        }
+        $conn->close();
+    }
 ?>
 <div id="dashboard">
     <div id="details">
@@ -26,6 +94,13 @@
             <input type="password" name="n_password" /><br />
             Verify Current Password:<br />
             <input type="password" name="n_verify" required /><br /><br />
+             <?php
+                if(isset($n_errors)){
+                    foreach($n_errors as $error){
+                        echo $error."<br />";
+                    }
+                }
+            ?>
             <input type="submit" value="Update Account" name="update_info" />
         </form>
         <br />
@@ -41,10 +116,10 @@
             <h4>Issue Keyfile</h4>
             <p>You can issue pretty much as many keyfiles as you want under an account secret. Those keys will remain valid until either the account secret or the server signing key is changed.</p>
             Last Secret Refresh: <span style="background:rgba(0,0,0,.5);font-weight:bold;padding:5px 10px;color:<?php
-            if($secret_time_elapsed->m < 6){
+            if($secret_time_elapsed->m < 5){
                 echo "green";
             }
-            elseif($secret_time_elapsed->m < 12){
+            elseif($secret_time_elapsed->m < 6){
                 echo "orange";
             }
             else { echo "red"; }
@@ -56,8 +131,10 @@
             <input type="text" name="kf_name" placeholder="AppVar Name" required /><br />
             <input type="submit" name="kf_emit" value="Generate Keyfile" /><br />
             <?php
-                foreach($kf_errors as $error){
-                    echo $error."<br />";
+                if(isset($kf_errors)){
+                    foreach($kf_errors as $error){
+                        echo $error."<br />";
+                    }
                 }
             ?>
         </form>
