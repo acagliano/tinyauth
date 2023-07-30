@@ -1,3 +1,9 @@
 [submodule "ti_vars_lib"]
 	path = ti_vars_lib
 	url = https://github.com/adriweb/tivars_lib.git
+[submodule "bin/convbin"]
+	path = bin/convbin
+	url = https://github.com/mateoconlechuga/convbin.git
+[submodule "convbin"]
+	path = convbin
+	url = https://github.com/mateoconlechuga/convbin.git
