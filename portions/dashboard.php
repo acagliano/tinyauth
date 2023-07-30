@@ -89,18 +89,18 @@
         <form id="update" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
             <h4>Update Account Information</h4>
             New Email:<br />
-            <input type="text" name="n_email" /><br />
+            <input type="text" name="n_email" value="<?php echo $_SESSION['email'];?>" /><br />
             New Password:<br />
-            <input type="password" name="n_password" /><br />
+            <input type="password" name="n_password" placeholder="new password" autocomplete="new-password" /><br />
             Verify Current Password:<br />
-            <input type="password" name="n_verify" required /><br /><br />
+            <input type="password" name="n_verify" placeholder="current password" autocomplete="new-password" required /><br />
              <?php
                 if(isset($n_errors)){
                     foreach($n_errors as $error){
                         echo $error."<br />";
                     }
                 }
-            ?>
+            ?><br />
             <input type="submit" value="Update Account" name="update_info" />
         </form>
         <br />
@@ -126,7 +126,7 @@
             ?>"><?php echo $_SESSION["secret_creation_ts"]; ?></span><span id="secret-ts-hover" style="position:relative; border:1px solid red; margin:0 5px; cursor:pointer; cursor:hand;">&#10067;<span id="secret-ts-exp">The coloring of the timestamp indicates the lifespan/security grading of the active secret, including the age of the secret and the number of keyfiles issued under it.<br /><span style="color:green;">Green indicates that your account secret can still safely be used.</span><br /><span style="color:orange;">Orange indicates that your account secret is aging and should be refreshed soon.</span><br /><span style="color:red;">Red indicates that your account secret has been in use longer than is recommended.</span></span></span>
             <br />
             Keyfile Encryption Passphrase (omit for no encryption):<br />
-            <input type="password" name="kf_passphrase" placeholder="passphrase" /><br />
+            <input type="password" name="kf_passphrase" placeholder="passphrase" autocomplete="new-password" /><br />
             On Device Name:<br />
             <input type="text" name="kf_name" placeholder="AppVar Name" required /><br />
             <input type="submit" name="kf_emit" value="Generate Keyfile" /><br />
