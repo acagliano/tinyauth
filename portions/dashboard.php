@@ -77,6 +77,21 @@
         }
         $conn->close();
     }
+
+    $jsondata = json_decode(file_get_contents('logs/auth.log'), true);
+    $hitsarray = array();
+    foreach($jsondata as $json){
+        if($json["user-id"] == $_SESSION["id"]){
+            $hitsarray[$json["ip"]]["hits"]+=1;
+            if($json["result"] == "success"){
+                $hitsarray[$json["ip"]]["success"] += 1;
+            } elseif($json["result"] == "fail"){
+                $hitsarray[$json["ip"]]["fail"] += 1;
+            } else {
+                $hitsarray[$json["ip"]]["error"] += 1;
+            }
+        }
+    }
 ?>
 <div id="dashboard">
     <div id="details">
@@ -138,5 +153,38 @@
                 }
             ?>
         </form>
+        <details open>
+            <summary>Authentication Attempts</summary>
+            <form><table width="100%">
+                <col width="50%" />
+                <col width="10%" />
+                <col width="10%" />
+                <col width="10%" />
+                <col width="10%" />
+                <col width="10%" />
+                <tr>
+                    <th>IP/Hostname</th>
+                    <th>&#128272;</th>
+                    <th>&#x2705;</th>
+                    <th>&#x274c;</th>
+                    <th>&#x2757;</th>
+                    <th>Select</th>
+                </tr>
+                <?php
+                    foreach($hitsarray as $ip=>$data){
+                        echo "<tr>";
+                        echo "<td>".gethostbyaddr($ip)."</td>";
+                        echo "<td class=\"center\">".$data["hits"]."</td>";
+                        echo "<td class=\"center\">".$data["success"]."</td>";
+                        echo "<td class=\"center\">".$data["fail"]."</td>";
+                        echo "<td class=\"center\">".$data["error"]."</td>";
+                        echo "<td><input type='checkbox' name='bladd[]' value='$ip' /></td>";
+                    }
+                ?>
+            </table>
+            <br />
+            <input type="submit" name="submit_blacklist" value="Update Blacklist" />
+        </form>
+        </details>
     </div>
 </div>

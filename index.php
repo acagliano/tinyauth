@@ -5,11 +5,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="styles/template.css" />
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <style>
 
             #content>div{
                 background:rgba(0,0,0,.15);
-                font-size:16px;
+                font-size:14px;
                 padding:5px;
                 color:white;
             }
@@ -17,7 +19,7 @@
             #content>div>p {margin:0 10px;}
             #content>#content-demo {width:60%; height:auto!important; display:block; margin:auto;}
             #content>#content-exp-keygen {position:absolute; right:45%; top:10%; width:40%;}
-            #content>#content-exp-easy {position:absolute; right:50%; bottom:10%; width:45%;}
+            #content>#content-exp-easy {position:absolute; right:50%; bottom:3%; width:45%;}
             #content>#content-exp-devs {position:absolute; right:2%; bottom:10%; width:28%;}
             #content>#content-exp-analytics {position:absolute; right:2%; top:5%; width:18%;}
             @media only screen and (max-width: 600px) {

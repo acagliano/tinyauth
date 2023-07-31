@@ -117,7 +117,8 @@
      background: linear-gradient(to top, rgba(0, 0, 255, .5) 0%, rgba(255, 255, 255, 1) 12%);
  }
 
- #home-button div {
+ #home-button div,
+ #login-button div {
      padding: 5px;
  }
 

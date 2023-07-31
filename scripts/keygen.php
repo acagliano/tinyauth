@@ -5,7 +5,6 @@
     use FG\ASN1\Universal\Boolean;
     use FG\ASN1\Universal\PrintableString;
     use FG\ASN1\Universal\OctetString;
-    use FG\ASN1\Universal\ObjectIdentifier;
     use FG\ASN1\Universal\Sequence;
 
     require_once "ti_vars_lib/src/autoloader.php";
@@ -21,7 +20,7 @@
         if($privkey){
             $token = hash("sha512", $_SESSION["id"].$_SESSION["secret"], true);
             openssl_sign($token, $signature, $privkey, openssl_get_md_methods()[14]);
-            $asn1_user = new PrintableString($_SESSION["user"]);
+            $asn1_user = new Integer($_SESSION["id"]);
             $asn1_signature = new OctetString(bin2hex($signature));
             $asn1_credentials = new Sequence($asn1_user, $asn1_signature);
             $asn1_hash = new OctetString(bin2hex(hash('sha256', $asn1_user->getBinary().$asn1_signature->getBinary(), true)));
