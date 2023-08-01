@@ -26,9 +26,9 @@
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
         $env = parse_ini_file('.env');
-        $user = $_POST["user"];
+        $user = filter_input(INPUT_POST, "user", FILTER_VALIDATE_INT);
         if(($user !== null) && ($user !== false)){
-            $signature = $_POST["token"];
+            $signature = filter_input(INPUT_POST, "token", FILTER_DEFAULT);
             if(($signature !== null) && ($signature !== false)){
                 $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
                 $get_secret_stmt = $conn->prepare("SELECT secret FROM credentials WHERE id=?");
