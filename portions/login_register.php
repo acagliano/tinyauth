@@ -77,7 +77,7 @@
         <input type="text" name="r_username" required />
         <input type="password" name="r_password" required />
         <input type="email" name="r_email" required />
-        <div class="g-recaptcha" data-sitekey="6Le-9pAkAAAAAMIK25zYXLP9-f2ade_c3Zg_XeNz"></div>
+        <div class="g-recaptcha" data-sitekey="<?php echo $env['RECAPTCHA_SITEKEY'];?>"></div>
         <input type="submit" value="Register" name="r_submit" />
         <?php
             foreach($r_errors as $error){
