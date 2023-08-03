@@ -10,7 +10,7 @@
                     <div id="login-button" class="navitem"><a href="account.php">
                         <div class="w3-blue-gray w3-large"><i class="fa fa-user"></i> My Account</div>
                     </a></div>
-                    <div class="navitem"><a href="portions/document.php">Documentation</a></div>
+                    <div class="navitem"><a href="portions/api.php">Documentation</a></div>
                     <div class="navitem"><a href="portions/legal.php">Legal Notices</a></div>
                     <div class="navitem" onclick="show_compliances()">Compliance</div>
                 </div>

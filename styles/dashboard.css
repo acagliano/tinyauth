@@ -124,3 +124,7 @@ details td.center {
 #security-opts select {
     height: 25px;
 }
+
+details p {
+    margin: 5px 10px;
+}

@@ -4,9 +4,6 @@
          url("/fonts/sharetech/ShareTechMono-Regular.ttf") format("truetype")
  }
 
- a {
-     color: goldenrod;
- }
 
  html,
  body {
@@ -170,6 +167,10 @@
 
  #compliances>p {
      margin: 2%;
+ }
+
+ #compliances a {
+     color: goldenrod;
  }
 
  @media only screen and (max-width: 600px) {

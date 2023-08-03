@@ -1,5 +1,5 @@
 <?php
-   
+   $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     $then = new DateTime($_SESSION["secret_creation_ts"]);
     $now = new DateTime(date("Y-m-d H:i:s"));
     $secret_time_elapsed = $then->diff( $now );
@@ -13,7 +13,6 @@
     if(isset($_POST["update_info"])){
         $n_errors = array();
         if(password_verify($_POST["n_verify"], $_SESSION["password"])){
-            $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
             if(isset($_POST["n_email"]) && $_POST["n_email"] != ""){
                 $email = filter_var($_POST["n_email"], FILTER_VALIDATE_EMAIL);
                 if($email){
@@ -31,7 +30,6 @@
 
             }
             if(isset($_POST["n_password"]) && $_POST["n_password"] != ""){
-                $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
                 $passwd = password_hash($_POST["n_password"], PASSWORD_DEFAULT);
                 $passwd_update_stmt = $conn->prepare("UPDATE credentials SET password=? WHERE id=?");
                 $passwd_update_stmt->bind_param("si", $passwd, $_SESSION["id"]);
@@ -52,7 +50,6 @@
     if(isset($_POST["refresh_token"])){
         $secret = random_bytes(64);
         $timestamp = date("Y-m-d H:i:s");
-        $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
         $secret_update_stmt = $conn->prepare("UPDATE credentials SET secret=?,secret_creation_ts=? WHERE id=?");
         $secret_update_stmt->bind_param("ssi", $secret, $timestamp, $_SESSION["id"]);
         $status = $secret_update_stmt->execute();
@@ -64,7 +61,6 @@
         $conn->close();
     }
     if(isset($_POST["delete_account"])){
-        $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
         $delete_stmt = $conn->prepare("DELETE FROM credentials WHERE id=?");
         $delete_stmt->bind_param("i", $_SESSION["id"]);
         $status = $delete_stmt->execute();
@@ -79,7 +75,7 @@
     }
 
     if(isset($_POST["purge_sel"])){
-        $jsondata = json_decode(file_get_contents('logs/auth.log'), true);
+        $jsondata = json_decode(file_get_contents('logs/auth.json'), true);
         foreach($jsondata as $key=>$item){
             foreach($_POST["iplist"] as $ip){
                 if($item["ip"] == $ip){
@@ -88,52 +84,76 @@
                 }
             }
         }
-        var_dump($jsondata);
-        file_put_contents('logs/auth.log', json_encode($jsondata));
+        file_put_contents('logs/auth.json', json_encode($jsondata));
     }
 
-    if(isset($_POST["graylist_sel"])){
-        $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
-        if (!$conn->connect_error) {
-            $check_user_stmt = $conn->prepare("SELECT user FROM credentials WHERE user=?");
-            $check_user_stmt->bind_param("s", $newuser);
-            $check_user_stmt->execute();
-            $existing_result = $check_user_stmt->get_result();
+    if(isset($_POST["block_sel"])){
+        foreach($_POST["iplist"] as $ip){
+            $add_to_blacklist_stmt = $conn->prepare("select * from greylist where ip=? and assoc_id=?");
+            $add_to_blacklist_stmt->bind_param("si", $ip, $_SESSION["id"]);
+            $add_to_blacklist_stmt->execute();
+            $existing_result = $add_to_blacklist_stmt->get_result();
             $rows = $existing_result->fetch_all(MYSQLI_ASSOC);
             if(count($rows)==0){
-                $register_user_stmt = $conn->prepare("INSERT INTO credentials (`user`, `password`, `email`, `secret`, `secret_creation_ts`) VALUES (?, ?, ?, ?, ?)");
+                $add_to_blacklist_stmt = $conn->prepare("insert into greylist (`ip`, `assoc_id`) values (?, ?)");
+                $add_to_blacklist_stmt->bind_param("si", $ip, $_SESSION["id"]);
+                $add_to_blacklist_stmt->execute();
             }
         }
     }
+
+    if(isset($_POST["unblock_sel"])){
+        foreach($_POST["iplist"] as $ip){
+            $add_to_blacklist_stmt = $conn->prepare("delete from greylist where ip=? and assoc_id=?");
+            $add_to_blacklist_stmt->bind_param("si", $ip, $_SESSION["id"]);
+            $add_to_blacklist_stmt->execute();
+        }
+    }
+
     if(isset($_POST["goto_admin"]) && $_SESSION["administrator"] == true){
         header("Location:portions/admin.php");
     }
 
-    $jsondata = json_decode(file_get_contents('logs/auth.log'), true);
+    $jsondata = json_decode(file_get_contents('logs/auth.json'), true);
     $hitsarray = array();
+    foreach($jsondata as $json){
+        if($json["user-id"] == $_SESSION["id"]){
+            $hitsarray[$json["ip"]] = array(
+                "hits"=>0,
+                "success"=>0,
+                "fail"=>0,
+                "blocked"=>"NO"
+            );
+        }
+    }
     foreach($jsondata as $json){
         if($json["user-id"] == $_SESSION["id"]){
             $hitsarray[$json["ip"]]["hits"]+=1;
             if($json["result"] == "success"){
                 $hitsarray[$json["ip"]]["success"] += 1;
-            } elseif($json["result"] == "fail"){
-                $hitsarray[$json["ip"]]["fail"] += 1;
             } else {
-                $hitsarray[$json["ip"]]["error"] += 1;
+                $hitsarray[$json["ip"]]["fail"] += 1;
+            }
+            $check_greylist_stmt = $conn->prepare("select * from greylist where ip=? and assoc_id=?");
+            $check_greylist_stmt->bind_param("si", $json["ip"], $_SESSION["id"]);
+            $status = $check_greylist_stmt->execute();
+            $result = $check_greylist_stmt->get_result();
+            $rows = $result->fetch_all(MYSQLI_ASSOC);
+            if(count($rows)==0){
+                $hitsarray[$json["ip"]]["blocked"] = "NO";
+            }
+            else {
+                $hitsarray[$json["ip"]]["blocked"] = "YES";
             }
         }
     }
+    $conn->close();
 ?>
 <div id="dashboard">
     <div id="details">
         <h3 id="welcome-msg">Welcome, <?php echo $_SESSION["user"]; ?>!
             <form style="font-size:16px;" id="logout" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
                 <input type="submit" name="logout" value="Log Out" />
-                <?php
-                    if($_SESSION["administrator"] == true){
-                        echo "<input type=\"submit\" name=\"goto_admin\" value=\"Admin View\" />";
-                    }
-                ?>
             </form>
         </h3>
         <p>This page is your account management panel. You can change your email or password, reset your account secret, generate new keyfiles for your devices, monitor authentication attempts using your keyfiles, and even delete your account.</p>
@@ -191,6 +211,8 @@
         <details open>
             <summary><span style="font-weight:900; font-size:18px;">&emsp;Authentication Attempts</span>
                 <span style="float:right;">
+                    <input type="submit" name="block_sel" value="Block Selected" onclick="confirm('This will prevent the selected host(s)\' attempts to authenticate with your keys. Are you sure?');" />&emsp;
+                    <input type="submit" name="unblock_sel" value="Unblock Selected" onclick="confirm('This will allow the selected host(s)\' attempts to authenticate with your keys. Are you sure?');" />&emsp;
                     <input type="submit" name="purge_sel" value="Clear Selected" onclick="confirm('This will remove all logs of the selected host(s)\' attempts to authenticate with your keys. This action is not reversible. Are you sure?');" />&emsp;
                 </span>
             </summary>
@@ -203,11 +225,11 @@
                 <col width="10%" />
                 <tr>
                     <th>IP/Hostname</th>
-                    <th>&#128272;</th>
-                    <th>&#x2705;</th>
-                    <th>&#x274c;</th>
-                    <th>&#x2757;</th>
-                    <th>Select</th>
+                    <th title="attempts">&#128272;</th>
+                    <th title="success">&#x2705;</th>
+                    <th title="fail">&#x274c;</th>
+                    <th title="is blacklisted?">BLOCK</th>
+                    <th></th>
                 </tr>
                 <?php
                     foreach($hitsarray as $ip=>$data){
@@ -216,7 +238,7 @@
                         echo "<td class=\"center\">".$data["hits"]."</td>";
                         echo "<td class=\"center\">".$data["success"]."</td>";
                         echo "<td class=\"center\">".$data["fail"]."</td>";
-                        echo "<td class=\"center\">".$data["error"]."</td>";
+                        echo "<td class=\"center\">".$data["blocked"]."</td>";
                         echo "<td><input type='checkbox' name='iplist[]' value='$ip' /></td>";
                     }
                 ?>
@@ -225,12 +247,13 @@
         <form id="security-opts" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post" style="font-size:14px;">
         <details open>
             <summary ><span style="font-weight:900; font-size:18px;">&emsp;Rate Limiting Policy</span>
-                <span style="float:right;">
-                    <input type="submit" name="update_security_opts" value="Save Changes" />
-                </span>
             </summary>
-            <p style="margin:5px 10px;">TInyAuth implements a server-wide policy for rate-limiting keyfile authentication attempts. A single host can run up to <span style="font-weight:bold;">50 authentication attempts within 1 minute</span>; anything in excess of this rate will be rejected until the rate falls below the threshold. This serves to protect users against brute force attacks against their keys and to protect the Service against request floods that might affect performance for legitimate users.</p>
-            <hr />
+            <p>TInyAuth implements a server-wide policy for rate-limiting keyfile authentication attempts.</p>
+            <ul>
+                <li><span style="font-weight:bold;">50 authentication attempts within 1 minute</span> (per querying host, not per user)</li>
+                <li>Upon hitting threshold, host is temporarily greylisted for increasing intervals of time starting at 60 seconds.</li>
+            </ul>
+            <p>This serves to protect users against brute force attacks against their keys and to protect the Service against request floods that might affect performance for legitimate users.</p>
         </details></form>
     </div>
 </div>
