@@ -20,7 +20,7 @@
                     <li>Determine if keyfile uses encryption, if so decrypt.</li>
                     <li>Serialize credentials into packet for sending to bridge<sup>1</sup>.</li>
                     <li>Bridge<sup>1</sup> should relay packet over secure socket (SSL) to target server.</li>
-                    <li>Target server extracts serialized credentials, constructs and API request, and forwards that to TInyAuth.</li>
+                    <li>Target server extracts serialized credentials, constructs an API request, and forwards that to TInyAuth.</li>
                     <li>Target server checks response json for the &quot;success&quot; and optionally &quot;error&quot; keys. Handle user authorization accordingly.</li>
                 </ol>
             </p>
@@ -86,14 +86,20 @@ char* password = prompt_for_user_password();
 
 struct tinyauth_key k;
 tinyauth_open(&k, key_selected, password);
-uint8_t buf[k.credentials_len]; // this field can approximate needed output size
-size_t olen = tinyauth_serialize_for_transfer(&k, buf, TA_SERIALIZE_0TERM);
+// ^ Note that should the integrity checks included in the key fail,
+// an error will be returned and if the key is encrypted, the key will
+// not decrypt.
+
+if(!k.error){
+    uint8_t buf[k.credentials_len]; // this field can approximate needed output size
+    size_t olen = tinyauth_serialize_for_transfer(&k, buf, TA_SERIALIZE_0TERM);
+    network_send(buf, olen);
+    memset(buf, 0, olen);   // wipe this after use
+}
+
 tinyauth_close(&k);
 // ^ This frees allocated memory and destroys the copy of the key
-// Do not forget this or you may leave decrypted keyfile in memory.
-
-network_send(buf, olen);
-memset(buf, 0, olen);   // wipe this out once done as well</pre>
+// Do not forget this or you may leave decrypted keyfile in memory.</pre>
                 </li>
             </ol><br />
             <h2>Server-Side</h2>
