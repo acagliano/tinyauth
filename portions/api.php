@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>TInyAuth | Terms of Service, License, and Privacy Policy</title>
+        <title>TInyAuth | API Documentation</title>
         <style>
             #content {font-family:Arial; width:70%; margin:0 auto; border-left:5px solid black; border-right:5px solid black; padding:10px;}
             .heading {font-weight:bold;}
@@ -12,7 +12,7 @@
         <div id="content">
             <h1>API Documentation</h1>
             <p>Utilizing TInyAuth requires two layers of handling--client-side and server-side. The client-side deals with finding TInyAuth keyfiles, decoding the data within, performing decryption if the file is encrypted, and serializing that data into something that the server-side can process. The server-side deals with abstracting the data sent by the client and issuing a properly-formatted request to TInyAuth for authentication using that information.</p>
-            <p>It is also highly recommended that developers encrypt the transfer of credentials between the client and their service. As the API for TInyAuth is served over SSL no further encryption is needed. The workflow for processing user credentials should look something like this:
+            <p>It is also highly recommended that developers encrypt the transfer of credentials between the client and their own service. The API for TInyAuth is served over SSL. The workflow for processing user credentials should look something like this:
                 <ol>
                     <li>Search for TInyAuth keyfiles by prefix string.</li>
                     <li>Load keyfile selected by user.</li>
@@ -69,6 +69,9 @@ where: Credentials, Tag = Cipher(AES-256-GCM,
                     <span class="heading">The TInyAuth Static Library</span><br />
                     We have made available a static library to handle all of the aforementioned keyfile decoding and serialization. This leaves the application developer to handle only keyfile selection and actual transmission of data. The library is available at the <a href="https://github.com/acagliano/tinyauth/tree/ccbe57e3f7f2c0c0cde1baea2d3f2b1c51b617c3/client-library" target="_blank">TInyAuth Github</a>. NOTE: Requires <a href="https://github.com/acagliano/cryptx">Cryptx</a> library. Use of the library API is quite simple:
                     <pre style="font-family:monospace; background:rgba(0,0,0,.2); padding:2%; width:90%;">
+#include &lt;fileioc.h&gt;
+#include "tinyauth.h"
+
 char *var_name;
 void *vat_ptr = NULL;
 char keyfiles[128][9];   // support up to 128 keyfiles
