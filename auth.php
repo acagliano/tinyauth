@@ -121,7 +121,7 @@
         $sendgrid->send($email_obj);
     }
 
-    $logline = "Authentication request from ".$log_item["querying_ip"]." for ".$log_item["origin-ip"].".";
+    $logline = "Authentication request from ".$log_item["querying-ip"]." for ".$log_item["origin-ip"].".";
     if($log_item["error"] != ""){ $logline .= " ".$log_item["error"]."."; }
     $fp = fopen("logs/auth.log", "a+");
     fwrite($fp, $timestamp.": ".$logline."\n");
