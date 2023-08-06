@@ -5,6 +5,12 @@
         <style>
             #content {font-family:Arial; width:70%; margin:0 auto; border-left:5px solid black; border-right:5px solid black; padding:10px;}
             .heading {font-weight:bold;}
+            pre {font-family:monospace; background:rgba(0,0,0,.2); padding:2%; width:90%; white-space:pre-wrap;}
+            @media only screen and (max-width: 600px) {
+                #content{width:99%; margin:auto; border:none;}
+                #content>*{margin:0 2%;}
+                pre {width:99%;}
+            }
         </style>
     </head>
     <body>
@@ -36,7 +42,7 @@
                     <span class="heading">Extracting Credentials</span><br />
                     Once selected, the file can be opened using the <span style="font-family:monospace;">ti_Open</span> function from the <span style="font-family:monospace;">fileioc</span> toolchain standard library or using the <span style="font-family:monospace;">fopen</span> API from the C standard also implemented within the toolchain. The file can be read in-place but it is recommended to make a copy and perform decoding on that both to ensure scope and to allow for decryption without altering the file.<br /><br />
                     The ASN.1-encoded structure begins at the end of the 6-byte prefix string meaning you will need to begin decoding at that point. The ASN.1 structure of the keyfile is as follows:<br />
-                    <pre style="font-family:monospace; background:rgba(0,0,0,.2); padding:2%; width:90%;">
+                    <pre>
 KeyNormal     :: SEQUENCE {
     Encrypted   BOOLEAN,
     Credentials :: SEQUENCE {
@@ -68,7 +74,7 @@ where: Credentials, Tag = Cipher(AES-256-GCM,
                 <li>
                     <span class="heading">The TInyAuth Static Library</span><br />
                     We have made available a static library to handle all of the aforementioned keyfile decoding and serialization. This leaves the application developer to handle only keyfile selection and actual transmission of data. The library is available at the <a href="https://github.com/acagliano/tinyauth/tree/ccbe57e3f7f2c0c0cde1baea2d3f2b1c51b617c3/client-library" target="_blank">TInyAuth Github</a>. NOTE: Requires <a href="https://github.com/acagliano/cryptx">Cryptx</a> library. Use of the library API is quite simple:
-                    <pre style="font-family:monospace; background:rgba(0,0,0,.2); padding:2%; width:90%;">
+                    <pre>
 #include &lt;fileioc.h&gt;
 #include "tinyauth.h"
 
@@ -106,8 +112,15 @@ tinyauth_close(&k);
                 </li>
             </ol><br />
             <h2>Server-Side</h2>
-            <p>Use of TInyAuth on the server-side is even simpler. Once you deserialize the credentials you can send a POST request to TInyAuth with the credentials supplied as parameters. Here is some code demonstrating how to do this, in Python.</p>
-            <pre style="font-family:monospace; background:rgba(0,0,0,.2); padding:2%; width:90%;">
+            <p>Use of TInyAuth on the server-side is even simpler. Once you deserialize the credentials you can send a POST request to TInyAuth with the credentials supplied as parameters. There are three parameters required:</p>
+            <ul>
+                <li>user:&emsp;should contain the numerical ID of the user who owns the token to follow</li>
+                <li>token:&emsp;should contain the raw data of the user&apos;s authentication token</li>
+                <li>origin:&emsp;should contain the IP address of the host supplying the credentials</li>
+            </ul>
+            <p>As an alternative to the &quot;origin&quot; field specified above you may set the &quot;X-Forwarded-For&quot; header in your request. If this is specified, it will override the origin parameter of the request (which may in this case be omitted). Note that if you want to allow our Service to perform rate limiting against clients, the X-Forwarded-For header is required.</p>
+            <p>Note that both the user and token fields, as well as either the X-Forwarded-For header or origin field are required for the query to be accepted. Also be advised that all queries are sanitized and validated via appropriate input filters. Here is some code demonstrating how to pack user credentials into a valid POST request, in Python.</p>
+            <pre>
 import requests
 
 // assume received data is in 'data' and serialization method is TA_SERIALIZE_OTERM
@@ -120,7 +133,9 @@ creds = data.split("\0", maxsplit=1)
 uri = "https://tinyauth.cagstech.com/auth.php"
 response = requests.post(
     uri,
-    params={'user': creds[0], 'token': creds[1]},
+    headers={"X-Forwarded-For":self.addr[0]},
+    params={'user': creds[0], 'token': creds[1], 'origin': self.addr[0]},
+    # self.addr is assumed to be the addr tuple belonging to the client&apos;s socket
 )
 
 # check response

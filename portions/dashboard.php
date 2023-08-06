@@ -110,6 +110,23 @@
         }
     }
 
+    if(isset($_POST["notify-opts"])){
+        $notify_val = 1;
+        if($_POST["notify-secret-update"] == "true"){
+            $notify_val |= (1<<1);
+        }
+        if($_POST["notify-auth-fail"] == "true"){
+            $notify_val |= (1<<2);
+        }
+        if($_POST["notify-auth-success"] == "true"){
+            $notify_val |= (1<<3);
+        }
+        $update_notify_stmt = $conn->prepare("UPDATE credentials SET notify_flags=? WHERE id=?");
+        $update_notify_stmt->bind_param("ii", $notify_val, $_SESSION["id"]);
+        $update_notify_stmt->execute();
+        load_user($conn, $_SESSION["user"]);
+    }
+
     if(isset($_POST["goto_admin"]) && $_SESSION["administrator"] == true){
         header("Location:portions/admin.php");
     }
@@ -118,7 +135,12 @@
     $hitsarray = array();
     foreach($jsondata as $json){
         if($json["user-id"] == $_SESSION["id"]){
-            $hitsarray[$json["ip"]] = array(
+            if($json["origin-ip"] != ""){
+                $ip = $json["origin-ip"];
+            } else {
+                $ip = $json["querying-ip"];
+            }
+            $hitsarray[$ip] = array(
                 "hits"=>0,
                 "success"=>0,
                 "fail"=>0,
@@ -128,11 +150,16 @@
     }
     foreach($jsondata as $json){
         if($json["user-id"] == $_SESSION["id"]){
-            $hitsarray[$json["ip"]]["hits"]+=1;
-            if($json["result"] == "success"){
-                $hitsarray[$json["ip"]]["success"] += 1;
+            if($json["origin-ip"] != ""){
+                $ip = $json["origin-ip"];
             } else {
-                $hitsarray[$json["ip"]]["fail"] += 1;
+                $ip = $json["querying-ip"];
+            }
+            $hitsarray[$ip]["hits"]+=1;
+            if($json["result"] == "success"){
+                $hitsarray[$ip]["success"] += 1;
+            } else {
+                $hitsarray[$ip]["fail"] += 1;
             }
             $check_greylist_stmt = $conn->prepare("select * from greylist where ip=? and assoc_id=?");
             $check_greylist_stmt->bind_param("si", $json["ip"], $_SESSION["id"]);
@@ -140,10 +167,10 @@
             $result = $check_greylist_stmt->get_result();
             $rows = $result->fetch_all(MYSQLI_ASSOC);
             if(count($rows)==0){
-                $hitsarray[$json["ip"]]["blocked"] = "NO";
+                $hitsarray[$ip]["blocked"] = "NO";
             }
             else {
-                $hitsarray[$json["ip"]]["blocked"] = "YES";
+                $hitsarray[$ip]["blocked"] = "YES";
             }
         }
     }
@@ -244,16 +271,17 @@
                 ?>
             </table>
         </details></form>
-        <form id="security-opts" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post" style="font-size:14px;">
+        <form id="notify-opts" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post" style="font-size:14px;">
         <details open>
-            <summary ><span style="font-weight:900; font-size:18px;">&emsp;Rate Limiting Policy</span>
+            <summary ><span style="font-weight:900; font-size:18px;">&emsp;Notification Settings</span>
+            <input type="submit" name="notify-opts" value="Update" style="float:right; margin-right:5%;" />
             </summary>
-            <p>TInyAuth implements a server-wide policy for rate-limiting keyfile authentication attempts.</p>
-            <ul>
-                <li><span style="font-weight:bold;">50 authentication attempts within 1 minute</span> (per querying host, not per user)</li>
-                <li>Upon hitting threshold, host is temporarily greylisted for increasing intervals of time starting at 60 seconds.</li>
-            </ul>
-            <p>This serves to protect users against brute force attacks against their keys and to protect the Service against request floods that might affect performance for legitimate users.</p>
+                &emsp;&emsp;<input type="checkbox" name="notify-key-renew" value="true" disabled="disabled" checked />&emsp;&emsp;server signing-key renewal<br />
+                &emsp;&emsp;<input type="checkbox" name="notify-secret-update" value="true" <?php if($_SESSION["notify_flags"]>>1&1){echo "checked";}?> />&emsp;&emsp;<span style="color:red;">*</span> account secret update<br />
+                &emsp;&emsp;<input type="checkbox" name="notify-auth-fail" value="true" <?php if($_SESSION["notify_flags"]>>2&1){echo "checked";}?> />&emsp;&emsp;<span style="color:red;">*</span> failed authentication attempts<br />
+                &emsp;&emsp;<input type="checkbox" name="notify-auth-success" value="true" <?php if($_SESSION["notify_flags"]>>3&1){echo "checked";}?> />&emsp;&emsp;successful authentication attempts<br />
+                <br />
+                <span style="color:red;">*</span> recommended
         </details></form>
     </div>
 </div>

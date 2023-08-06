@@ -1,4 +1,6 @@
 <?php
+    require 'vendor/autoload.php';
+    use Sendgrid\Mail\Mail;
     if(isset($_POST["r_submit"])){
         $r_errors = array();
         $fields = [
@@ -31,6 +33,13 @@
                     if($register_user_stmt->execute()){
                         $r_errors[] = "User successfully registered";
                         load_user($conn, $newuser);
+                        $sendgrid = new SendGrid($env['SENDGRID_API_KEY']);
+                        $email_obj    = new SendGrid\Mail\Mail();
+                        $email_obj->setFrom("admin@cagstech.com");
+                        $email_obj->setSubject("Welcome to TInyAuth");
+                        $email_obj->addTo($email);
+                        $email_obj->addContent("text/html", file_get_contents("emails/welcome-msg.dat"));
+                        $sendgrid->send($email_obj);
                         header("Refresh:0");
                     } else {
                         $r_errors[] = "Error writing to database.";
