@@ -77,8 +77,11 @@
     if(isset($_POST["purge_sel"])){
         $jsondata = json_decode(file_get_contents('logs/auth.json'), true);
         foreach($jsondata as $key=>$item){
+            if($item["origin-ip"] != ""){
+                $listing_ip = $item["origin-ip"];
+            } else { $listing_ip = $item["querying-ip"]; }
             foreach($_POST["iplist"] as $ip){
-                if($item["ip"] == $ip){
+                if($listing_ip == $ip){
                    unset($jsondata[$key]);
                    break;
                 }
