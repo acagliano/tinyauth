@@ -27,3 +27,40 @@ form input:not([type=submit]) {
 #home-button {
     display: block;
 }
+
+input[name=l_passwd_reset] {
+    float: right;
+}
+
+#reset-pass {
+    display: none;
+    position: fixed;
+    width: 30%;
+    height: auto;
+    top: 40vh;
+    left: 35%;
+    border: 2px solid blue;
+    box-shadow: 4px 4px 4px black;
+    background: rgba(0, 0, 0, .9);
+}
+
+#reset-pass-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: red;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+    cursor: hand;
+}
+
+#reset-pass form {
+    width: 100%;
+}

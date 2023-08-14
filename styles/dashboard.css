@@ -67,9 +67,9 @@ form h4 {
 #secret-ts-exp {
     display: none;
     position: absolute;
-    right: -25vw;
-    top: 0px;
-    width: 25vw;
+    left: -200px;
+    top: -100px;
+    width: 400px;
     height: auto;
     border: 2px solid goldenrod;
     background: rgba(0, 0, 0, 1);
@@ -86,6 +86,7 @@ details {
     background: rgba(0, 0, 0, .50);
     max-height: 50vh;
     overflow: auto;
+    overflow-wrap: anywhere;
 }
 
 details summary {
@@ -111,6 +112,10 @@ details td.center {
     text-align: center;
 }
 
+#keyfile-issue {
+    overflow: show;
+}
+
 #auth-log input[type=submit],
 #security-opts input[type=submit] {
     font-size: 12px;
@@ -127,4 +132,12 @@ details td.center {
 
 details p {
     margin: 5px 10px;
+}
+
+#qr-2fa {
+    float: right;
+    width: 15%;
+    height: auto;
+    outline: 10px solid black;
+    margin: 2%;
 }

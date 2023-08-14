@@ -1,4 +1,6 @@
 <?php
+require 'vendor/autoload.php';
+use OTPHP\TOTP;
    $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     $then = new DateTime($_SESSION["secret_creation_ts"]);
     $now = new DateTime(date("Y-m-d H:i:s"));
@@ -130,6 +132,26 @@
         load_user($conn, $_SESSION["user"]);
     }
 
+    if(isset($_POST["2fa-opts"])){
+        $notify_val = 0;
+        if($_POST["2fa-keyfile-login"] == "true"){
+            $notify_val |= (1<<0);
+        }
+        if($_POST["2fa-dashboard-login"] == "true"){
+            $notify_val |= (1<<1);
+        }
+        if($_POST["2fa-password-reset"] == "true"){
+            $notify_val |= (1<<2);
+        }
+        if($_POST["2fa-account-unlock"] == "true"){
+            $notify_val |= (1<<3);
+        }
+        $update_notify_stmt = $conn->prepare("UPDATE credentials SET 2fa_flags=? WHERE id=?");
+        $update_notify_stmt->bind_param("ii", $notify_val, $_SESSION["id"]);
+        $update_notify_stmt->execute();
+        load_user($conn, $_SESSION["user"]);
+    }
+
     if(isset($_POST["goto_admin"]) && $_SESSION["administrator"] == true){
         header("Location:portions/admin.php");
     }
@@ -186,7 +208,8 @@
                 <input type="submit" name="logout" value="Log Out" />
             </form>
         </h3>
-        <p>This page is your account management panel. You can change your email or password, reset your account secret, generate new keyfiles for your devices, monitor authentication attempts using your keyfiles, and even delete your account.</p>
+        <p>Welcome to your Dashboard.<br />
+        Here you can change your account info, manage account secrets, generate keyfiles for your devices, track key usage analytics, and even delete your account.</p>
         <form id="update" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
             <h4>Update Account Information</h4>
             New Email:<br />
@@ -207,16 +230,18 @@
         <br />
         <form id="danger" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
             <h4>Danger Zone</h4>
-            <input type="submit" value="Refresh Account Secret" name="refresh_token" onclick="confirm('This will revoke all keyfiles issued under this secret. Are you sure?');" /><br /><br />
+            <input type="submit" value="Regenerate Keyfile Secret" name="refresh_token" onclick="confirm('This will revoke all keyfiles issued under this secret. Are you sure?');" /><br /><br />
+            <input type="submit" value="Regenerate 2FA Secret" name="refresh_token" onclick="confirm('You will need to reconfigure your TOTP client application. Are you sure?');" /><br /><br />
             <input type="submit" value="Delete Account" name="delete_account" onclick="confirm('This will permanently delete your account and revoke all keys. Are you sure?');" />
         </form>
         <br />
     </div>
     <div id="more-details">
         <form id="issue-key" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
-            <h4>Issue Keyfile</h4>
+            <details id="keyfile-issue" open>
+            <summary><span style="font-weight:900; font-size:18px;">&emsp;Issue Keyfile</span></summary>
             <p>You can issue pretty much as many keyfiles as you want under an account secret. Those keys will remain valid until either the account secret or the server signing key is changed.</p>
-            Last Secret Refresh: <span style="background:rgba(0,0,0,1);font-weight:bold;padding:5px 10px;color:<?php
+            <p>Last Secret Refresh: <span style="background:rgba(0,0,0,1);font-weight:bold;padding:5px 10px;color:<?php
             if($secret_time_elapsed->m < 5){
                 echo "green";
             }
@@ -224,11 +249,11 @@
                 echo "orange";
             }
             else { echo "red"; }
-            ?>"><?php echo $_SESSION["secret_creation_ts"]; ?></span><span id="secret-ts-hover" style="position:relative; border:1px solid red; margin:0 5px; cursor:pointer; cursor:hand;">&#10067;<span id="secret-ts-exp">The coloring of the timestamp indicates the lifespan/security grading of the active secret, including the age of the secret and the number of keyfiles issued under it.<br /><span style="color:green;">Green indicates that your account secret can still safely be used.</span><br /><span style="color:orange;">Orange indicates that your account secret is aging and should be refreshed soon.</span><br /><span style="color:red;">Red indicates that your account secret has been in use longer than is recommended.</span></span></span>
-            <br /><br />
-            <input type="password" name="kf_passphrase" placeholder="passphrase (optional)" autocomplete="new-password" />&emsp;
+            ?>"><?php echo $_SESSION["secret_creation_ts"]; ?></span><span id="secret-ts-hover" style="position:relative; border:1px solid red; margin:0 5px; cursor:pointer; cursor:hand;">&#10067;<span id="secret-ts-exp">Color approximates secret lifespan elapsed.<br /><span style="color:green;">Green indicates significant lifespan remaining.</span><br /><span style="color:orange;">Orange indicates secret aging.</span><br /><span style="color:red;">Red indicates secret should be expired.</span></span></span>
+            </p>
+            <p style="margin:10px 5px;"><input type="password" name="kf_passphrase" placeholder="passphrase (optional)" autocomplete="new-password" />&emsp;
             <input type="text" name="kf_name" placeholder="AppVar Name" maxlength="8" required />&emsp;
-            <input type="submit" name="kf_emit" value="Generate Keyfile" /><br />
+            <input type="submit" name="kf_emit" value="Generate Keyfile" /></p>
             <?php
                 if(isset($kf_errors)){
                     foreach($kf_errors as $error){
@@ -236,7 +261,8 @@
                     }
                 }
             ?>
-        </form><br />
+        </details>
+        </form>
         <form id="auth-log" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
         <details open>
             <summary><span style="font-weight:900; font-size:18px;">&emsp;Authentication Attempts</span>
@@ -275,16 +301,38 @@
             </table>
         </details></form>
         <form id="notify-opts" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post" style="font-size:14px;">
-        <details open>
-            <summary ><span style="font-weight:900; font-size:18px;">&emsp;Notification Settings</span>
+        <details>
+            <summary><span style="font-weight:900; font-size:18px;">&emsp;Notification Settings</span>
             <input type="submit" name="notify-opts" value="Update" style="float:right; margin-right:5%;" />
             </summary>
                 &emsp;&emsp;<input type="checkbox" name="notify-key-renew" value="true" disabled="disabled" checked />&emsp;&emsp;server signing-key renewal<br />
-                &emsp;&emsp;<input type="checkbox" name="notify-secret-update" value="true" <?php if($_SESSION["notify_flags"]>>1&1){echo "checked";}?> />&emsp;&emsp;<span style="color:red;">*</span> account secret update<br />
-                &emsp;&emsp;<input type="checkbox" name="notify-auth-fail" value="true" <?php if($_SESSION["notify_flags"]>>2&1){echo "checked";}?> />&emsp;&emsp;<span style="color:red;">*</span> failed authentication attempts<br />
+                &emsp;&emsp;<input type="checkbox" name="notify-secret-update" value="true" <?php if($_SESSION["notify_flags"]>>1&1){echo "checked";}?> />&emsp;&emsp;account secret update<br />
+                &emsp;&emsp;<input type="checkbox" name="notify-auth-fail" value="true" <?php if($_SESSION["notify_flags"]>>2&1){echo "checked";}?> />&emsp;&emsp;failed authentication attempts<br />
                 &emsp;&emsp;<input type="checkbox" name="notify-auth-success" value="true" <?php if($_SESSION["notify_flags"]>>3&1){echo "checked";}?> />&emsp;&emsp;successful authentication attempts<br />
-                <br />
-                <span style="color:red;">*</span> recommended
+        </details></form>
+        <form id="2fa-opts" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post" style="font-size:14px;">
+        <details>
+            <summary><span style="font-weight:900; font-size:18px;">&emsp;2FA Settings</span>
+            <input type="submit" name="2fa-opts" value="Update" style="float:right; margin-right:5%;" />
+            </summary>
+                    <?php
+                        $otp = TOTP::createFromSecret($_SESSION["2fa_secret"]);
+                        $otp->setLabel($_SESSION["user"]."@TInyAuth");
+                        $otp->setIssuer("TInyAuth");
+                        $goqr_me = $otp->getQrCodeUri(
+                            'https://api.qrserver.com/v1/create-qr-code/?data=[DATA]&qzone=2&margin=0&size=300x300&ecc=M', '[DATA]');
+                        echo "<img id='qr-2fa' src='{$goqr_me}' alt='QR Code'>";
+                    ?>
+                &emsp;&emsp;<span style="font-weight:bold; font-size:105%;">Enable Two-Factor Authentication For:</span><br />
+                &emsp;&emsp;<input type="checkbox" name="2fa-keyfile-login" value="true" <?php if($_SESSION["2fa_flags"]>>0&1){echo "checked";}?> />&emsp;&emsp;keyfile authentication<br />
+                &emsp;&emsp;<input type="checkbox" name="2fa-dashboard-login" value="true" <?php if($_SESSION["2fa_flags"]>>1&1){echo "checked";}?> />&emsp;&emsp;dashboard login<br />
+                &emsp;&emsp;<input type="checkbox" name="2fa-password-reset" value="true" <?php if($_SESSION["2fa_flags"]>>2&1){echo "checked";}?> />&emsp;&emsp;password reset<br />
+                &emsp;&emsp;<input type="checkbox" name="2fa-account-unlock" value="true" <?php if($_SESSION["2fa_flags"]>>3&1){echo "checked";}?> />&emsp;&emsp;account unlock<br />
+                <hr />
+                &emsp;&emsp;Scan the QR Code to the right to add to your TOTP application of choice.<br />
+                &emsp;&emsp;Alternatively, you can manually enter the secret below.<br />
+                &emsp;&emsp;<span style="color:red; font-weight:bold;">Do not share your secret or QR code with others.</span><br />
+                &emsp;&emsp;SECRET: <span style="font-family:monospace; font-size:90%;"><?php echo $_SESSION["2fa_secret"]; ?></span>
         </details></form>
     </div>
 </div>

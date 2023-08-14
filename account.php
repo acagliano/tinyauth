@@ -1,4 +1,7 @@
 <?php
+require 'vendor/autoload.php';
+use OTPHP\TOTP;
+use ParagonIE\ConstantTime\Base32;
     function load_user($conn, $user){
         $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE user=?");
         $load_user_stmt->bind_param("s", $user);
@@ -8,8 +11,14 @@
         foreach($row as $key=>$value){
             $_SESSION[$key] = $value;
         }
+        if(empty($_SESSION["2fa_secret"])){
+            $secret_2fa = trim(Base32::encodeUpper(random_bytes(32)), "=");
+            $_SESSION["2fa_secret"] = $secret_2fa;
+            $set_2fa_secret_stmt = $conn->prepare("UPDATE credentials SET 2fa_secret=? WHERE id=?");
+            $set_2fa_secret_stmt->bind_param("si", $secret_2fa, $_SESSION["id"]);
+            $set_2fa_secret_stmt->execute();
+        }
     }
-    
     $env = parse_ini_file('.env');
     session_start();
     if(isset($_SESSION["user"])){
