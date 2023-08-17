@@ -2,6 +2,7 @@
 
     require 'vendor/autoload.php';
     use Sendgrid\Mail\Mail;
+    use OTPHP\TOTP;
     $email_file = "";
 
     $http_response = 401;
@@ -51,16 +52,27 @@
                     $existing_result = $get_blacklist_stmt->get_result();
                     $rows = $existing_result->fetch_all(MYSQLI_ASSOC);
                     if(count($rows)==0){
-                        $get_secret_stmt = $conn->prepare("SELECT secret,email,notify_flags FROM credentials WHERE id=?");
+                        $get_secret_stmt = $conn->prepare("SELECT secret,email,notify_flags,2fa_flags,2fa_secret FROM credentials WHERE id=?");
                         $get_secret_stmt->bind_param("i", $user);
                         $get_secret_stmt->execute();
-                        $get_secret_stmt->bind_result($secret, $email, $notify_flags);
+                        $get_secret_stmt->bind_result($secret, $email, $notify_flags, $twof_flags, $twof_secret);
                         $get_secret_stmt->fetch();
                         $get_secret_stmt->close();
                         $token = hash("sha512", $user.$secret, true);
                         $pubkey = openssl_get_publickey(file_get_contents(".secrets/pubkey.pem"));
                         if($pubkey){
-                            if(openssl_verify($token, $signature, $pubkey, openssl_get_md_methods()[14]) == 1){
+                            $auth_success = openssl_verify($token, $signature, $pubkey, openssl_get_md_methods()[14]);
+                            if($twof_flags>>0&1){
+                                $otp = TOTP::createFromSecret($twof_secret);
+                                $otp_input = filter_input(INPUT_POST, "otp", FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
+                                if($otp_input === null || $otp_input === false) {
+                                    $auth_success &= false; 
+                                }
+                                else {
+                                    $auth_success &= $otp->verify($otp_input);
+                                }
+                            }
+                            if($auth_success){
                                 $json_response["success"] = "true";
                                 $http_response = 200;
                                 $log_item["result"] = "success";
@@ -85,6 +97,7 @@
                         $log_item["result"] = "fail";
                         $log_item["error"] = "Blacklisted by user config";
                     }
+                    $conn->close();
                 } else {
                     $http_response = 400;
                     $log_item["error"] = "Invalid token in request";

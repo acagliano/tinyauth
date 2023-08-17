@@ -18,7 +18,7 @@
             #content>div>.title{color:goldenrod; font-weight:bold; font-size:120%; margin-bottom:5px;}
             #content>div>p {margin:0 10px;}
             #content>#content-demo {width:60%; height:auto!important; display:block; margin:auto;}
-            #content>#content-exp-keygen {position:absolute; right:45%; top:10%; width:40%;}
+            #content>#content-exp-keygen {position:absolute; right:50%; top:7%; width:40%;}
             #content>#content-exp-easy {position:absolute; right:50%; bottom:3%; width:45%;}
             #content>#content-exp-devs {position:absolute; right:2%; bottom:10%; width:28%;}
             #content>#content-exp-analytics {position:absolute; right:2%; top:5%; width:18%;}

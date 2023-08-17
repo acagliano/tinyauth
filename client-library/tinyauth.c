@@ -189,8 +189,8 @@ size_t tinyauth_serialize_for_transfer(struct tinyauth_key *keyobj, const char *
   packet_len += (token_len + 3);
   if (otp)
   {
-    *((size_t *)packet + 3 + username_len + 3 + token_len) = 6;
-    memcpy(packet + 3 + username_len + 3 + token_len + 3, otp, 6);
+    *((size_t *)packet + packet_len) = 6;
+    memcpy(packet + packet_len + 3, otp, 6);
     packet_len += 9;
   }
   return packet_len;

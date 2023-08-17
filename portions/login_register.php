@@ -45,7 +45,7 @@
                         $email_obj->addTo($email);
                         $email_obj->addContent("text/html", file_get_contents("emails/welcome-msg.dat"));
                         $sendgrid->send($email_obj);
-                        header("Refresh:0");
+                        echo "<meta http-equiv='refresh' content='0'>";
                     } else {
                         $r_errors[] = "Error writing to database.";
                     }

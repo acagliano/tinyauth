@@ -1,6 +1,7 @@
 <?php
 require 'vendor/autoload.php';
 use OTPHP\TOTP;
+use ParagonIE\ConstantTime\Base32;
    $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     $then = new DateTime($_SESSION["secret_creation_ts"]);
     $now = new DateTime(date("Y-m-d H:i:s"));
@@ -9,7 +10,7 @@ use OTPHP\TOTP;
     if(isset($_POST["logout"])){
         session_destroy();
         unset($_SESSION);
-        header("Refresh:0");
+        echo "<meta http-equiv='refresh' content='0'>";
     }
 
     if(isset($_POST["update_info"])){
@@ -46,22 +47,32 @@ use OTPHP\TOTP;
             $n_errors[] = "Invalid password provided.";
         }
         load_user($conn, $_SESSION["user"]);
-        $conn->close();
     }
 
-    if(isset($_POST["refresh_token"])){
+    if(isset($_POST["refresh_keyfile_secret"])){
         $secret = random_bytes(64);
         $timestamp = date("Y-m-d H:i:s");
         $secret_update_stmt = $conn->prepare("UPDATE credentials SET secret=?,secret_creation_ts=? WHERE id=?");
         $secret_update_stmt->bind_param("ssi", $secret, $timestamp, $_SESSION["id"]);
         $status = $secret_update_stmt->execute();
         if ($status === false) {
-            echo "<script>alert(\"Error writing new secret. If this issue persists, please contact system administrator.\");</script>";
+            echo "<script>alert(\"Error writing new keyfile secret. If this issue persists, please contact system administrator.\");</script>";
         } else {
             load_user($conn, $_SESSION["user"]);
         }
-        $conn->close();
     }
+    if(isset($_POST["refresh_2fa_secret"])){
+        $secret = trim(Base32::encodeUpper(random_bytes(32)), "=");
+        $secret_update_stmt = $conn->prepare("UPDATE credentials SET 2fa_secret=? WHERE id=?");
+        $secret_update_stmt->bind_param("si", $secret, $_SESSION["id"]);
+        $status = $secret_update_stmt->execute();
+        if ($status === false) {
+            echo "<script>alert(\"Error writing new 2FA secret. If this issue persists, please contact system administrator.\");</script>";
+        } else {
+            load_user($conn, $_SESSION["user"]);
+        }
+    }
+
     if(isset($_POST["delete_account"])){
         $delete_stmt = $conn->prepare("DELETE FROM credentials WHERE id=?");
         $delete_stmt->bind_param("i", $_SESSION["id"]);
@@ -73,7 +84,6 @@ use OTPHP\TOTP;
             $_SESSION["user"] = "";
             header("Refresh:0");
         }
-        $conn->close();
     }
 
     if(isset($_POST["purge_sel"])){
@@ -142,9 +152,6 @@ use OTPHP\TOTP;
         }
         if($_POST["2fa-password-reset"] == "true"){
             $notify_val |= (1<<2);
-        }
-        if($_POST["2fa-account-unlock"] == "true"){
-            $notify_val |= (1<<3);
         }
         $update_notify_stmt = $conn->prepare("UPDATE credentials SET 2fa_flags=? WHERE id=?");
         $update_notify_stmt->bind_param("ii", $notify_val, $_SESSION["id"]);
@@ -230,9 +237,9 @@ use OTPHP\TOTP;
         <br />
         <form id="danger" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
             <h4>Danger Zone</h4>
-            <input type="submit" value="Regenerate Keyfile Secret" name="refresh_token" onclick="confirm('This will revoke all keyfiles issued under this secret. Are you sure?');" /><br /><br />
-            <input type="submit" value="Regenerate 2FA Secret" name="refresh_token" onclick="confirm('You will need to reconfigure your TOTP client application. Are you sure?');" /><br /><br />
-            <input type="submit" value="Delete Account" name="delete_account" onclick="confirm('This will permanently delete your account and revoke all keys. Are you sure?');" />
+            <input type="submit" value="Regenerate Keyfile Secret" name="refresh_keyfile_secret" onclick="return confirm('This will revoke all keyfiles issued under this secret. Are you sure?');" /><br /><br />
+            <input type="submit" value="Regenerate 2FA Secret" name="refresh_2fa_secret" onclick="return confirm('You will need to reconfigure your TOTP client application. Are you sure?');" /><br /><br />
+            <input type="submit" value="Delete Account" name="delete_account" onclick="return confirm('This will permanently delete your account and revoke all keys. Are you sure?');" />
         </form>
         <br />
     </div>
@@ -267,9 +274,9 @@ use OTPHP\TOTP;
         <details open>
             <summary><span style="font-weight:900; font-size:18px;">&emsp;Authentication Attempts</span>
                 <span style="float:right;">
-                    <input type="submit" name="block_sel" value="Block Selected" onclick="confirm('This will prevent the selected host(s)\' attempts to authenticate with your keys. Are you sure?');" />&emsp;
-                    <input type="submit" name="unblock_sel" value="Unblock Selected" onclick="confirm('This will allow the selected host(s)\' attempts to authenticate with your keys. Are you sure?');" />&emsp;
-                    <input type="submit" name="purge_sel" value="Clear Selected" onclick="confirm('This will remove all logs of the selected host(s)\' attempts to authenticate with your keys. This action is not reversible. Are you sure?');" />&emsp;
+                    <input type="submit" name="block_sel" value="Block Selected" onclick="return confirm('This will prevent the selected host(s)\' attempts to authenticate with your keys. Are you sure?');" />&emsp;
+                    <input type="submit" name="unblock_sel" value="Unblock Selected" onclick="return confirm('This will allow the selected host(s)\' attempts to authenticate with your keys. Are you sure?');" />&emsp;
+                    <input type="submit" name="purge_sel" value="Clear Selected" onclick="return confirm('This will remove all logs of the selected host(s)\' attempts to authenticate with your keys. This action is not reversible. Are you sure?');" />&emsp;
                 </span>
             </summary>
             <table width="100%">
@@ -327,7 +334,6 @@ use OTPHP\TOTP;
                 &emsp;&emsp;<input type="checkbox" name="2fa-keyfile-login" value="true" <?php if($_SESSION["2fa_flags"]>>0&1){echo "checked";}?> />&emsp;&emsp;keyfile authentication<br />
                 &emsp;&emsp;<input type="checkbox" name="2fa-dashboard-login" value="true" <?php if($_SESSION["2fa_flags"]>>1&1){echo "checked";}?> />&emsp;&emsp;dashboard login<br />
                 &emsp;&emsp;<input type="checkbox" name="2fa-password-reset" value="true" <?php if($_SESSION["2fa_flags"]>>2&1){echo "checked";}?> />&emsp;&emsp;password reset<br />
-                &emsp;&emsp;<input type="checkbox" name="2fa-account-unlock" value="true" <?php if($_SESSION["2fa_flags"]>>3&1){echo "checked";}?> />&emsp;&emsp;account unlock<br />
                 <hr />
                 &emsp;&emsp;Scan the QR Code to the right to add to your TOTP application of choice.<br />
                 &emsp;&emsp;Alternatively, you can manually enter the secret below.<br />
