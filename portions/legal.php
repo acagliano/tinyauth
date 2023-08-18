@@ -3,11 +3,16 @@
     <head>
         <title>TInyAuth | Terms of Service, License, and Privacy Policy</title>
         <style>
+            html,body {margin:0; padding:0;}
             #content {font-family:Arial; width:70%; margin:0 auto; border-left:5px solid black; border-right:5px solid black; padding:10px;}
+            #header {display:flex; flex-direction:row; justify-content:space-between; border-bottom:3px solid black; background:rgba(105,105,105); margin:0;}
+            #header>div {padding:5px; color:white; text-decoration:none;}
+            #header>div>a {color:inherit;}
+            #title {font-size:130%; font-weight:bold;}
         </style>
     </head>
     <body>
-        <a href="/">Home</a>&emsp;|&emsp;<a href="<?php echo filter_input(INPUT_SERVER, "HTTP_REFERER", FILTER_SANITIZE_URL); ?>">Back</a>
+        <?php include_once("header-min.php"); ?>
         <div id="content">
             <h2>Terms of Service</h2>
             <ol>

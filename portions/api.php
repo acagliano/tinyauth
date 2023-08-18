@@ -3,7 +3,12 @@
     <head>
         <title>TInyAuth | API Documentation</title>
         <style>
+            html,body {margin:0; padding:0;}
             #content {font-family:Arial; width:70%; margin:0 auto; border-left:5px solid black; border-right:5px solid black; padding:10px;}
+            #header {display:flex; flex-direction:row; justify-content:space-between; border-bottom:3px solid black; background:rgba(105,105,105); margin:0;}
+            #header>div {padding:5px; color:white; text-decoration:none;}
+            #header>div>a {color:inherit;}
+            #title {font-size:130%; font-weight:bold;}
             .heading {font-weight:bold;}
             pre {font-family:monospace; background:rgba(0,0,0,.2); padding:2%; width:90%; white-space:pre-wrap;}
             @media only screen and (max-width: 600px) {
@@ -13,9 +18,10 @@
             }
         </style>
     </head>
-    <body><a name="top"></a>
-        <a href="/">Home</a>&emsp;|&emsp;<a href="<?php echo filter_input(INPUT_SERVER, "HTTP_REFERER", FILTER_SANITIZE_URL); ?>">Back</a>
+    <body>
+        <?php include_once("header-min.php"); ?>
         <div id="content">
+            <a name="top"></a>
             <h2>Table of Contents</h2>
             <table width="60%">
                 <col width="80%" />
@@ -48,7 +54,7 @@
             </p>
             <hr width="80%;" />
             <p style="font-style:italic; font-size:90%; width:90%; margin:auto;"><sup>1</sup>The use of a bridge is required because there currently exists no way to connect the client device directly to a router. The device can, however, open a usb/serial connection with a computer running a bridge that can convert between serial packets and TCP packets to facilitate a network.</p>
-            <a name="clientside"></a><h2>Client-Side</h2>&emsp;&emsp;<a href="#top">top</a>
+            <a name="clientside"></a><h2>Client-Side</h2>
             <ol>
                 <li>
                     <span class="heading"><a name="locatingkeys"></a>Locating TInyAuth Keys</span>&emsp;&emsp;<a href="#top">top</a><br />
@@ -136,9 +142,8 @@ tinyauth_close(&k);
 // Do not forget this or you may leave decrypted keyfile in memory.</pre>
                 </li>
             </ol><br />
-            <a name="serverside"></a><h2>Server-Side</h2>&emsp;&emsp;<a href="#top">top</a>
+            <a name="serverside"></a><h2>Server-Side</h2>
             <p>Use of TInyAuth on the server-side is even simpler. 
-            
             <ol>
                 <li><span class="heading"><a name="deserializing"></a>De-serializing Credentials</span>&emsp;&emsp;<a href="#top">top</a><br />
                     The first step to this part of the process is to reverse the serialization applied on the client side. This guide assumes you are length-prepending each field of the credentials payload. The first two fields--user id and signature--will always exists. The first field, the TOTP code, may not always be present. The following code written in Python should properly de-serialize the payload.

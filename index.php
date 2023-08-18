@@ -8,23 +8,27 @@
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <style>
+            #content {display:flex;
+                flex-direction:row; justify-content:space-around;}
 
-            #content>div{
+            #content-exp {
+                width:45%; display:flex; flex-direction:column; justify-content:space-around;
+            }
+            #content-demo-container {display:flex; align-items:center; justify-content:center;}
+            #content-exp>div{
                 background:rgba(0,0,0,.15);
-                font-size:14px;
+                font-size:calc(8px + 0.5vw);
                 padding:5px;
                 color:white;
             }
-            #content>div>.title{color:goldenrod; font-weight:bold; font-size:120%; margin-bottom:5px;}
+            #content div .title{color:goldenrod; font-weight:bold; font-size:120%; margin-bottom:5px;}
             #content>div>p {margin:0 10px;}
-            #content>#content-demo {width:60%; height:auto!important; display:block; margin:auto;}
-            #content>#content-exp-keygen {position:absolute; right:50%; top:7%; width:40%;}
-            #content>#content-exp-easy {position:absolute; right:50%; bottom:3%; width:45%;}
-            #content>#content-exp-devs {position:absolute; right:2%; bottom:10%; width:28%;}
-            #content>#content-exp-analytics {position:absolute; right:2%; top:5%; width:18%;}
+            #content #content-demo {width:100%; height:auto!important; display:block; margin:auto;}
             @media only screen and (max-width: 600px) {
-                #content>#content-exp-keygen, #content>#content-exp-easy, #content>#content-exp-devs, #content>#content-exp-analytics {position:static; width:100%; margin:1% 0;}
-                #content>#content-demo {display:none;}
+                #content {display:block;}
+                #content-exp {display:block; width:100%;}
+                #content-exp>div {position:static; width:100%; margin:1% 0;}
+                #content-demo-container {display:none;}
             }
         </style>
         <script src="scripts/toggle_compliances.js"></script>
@@ -32,7 +36,7 @@
     <body>
         <?php include_once("portions/header.php"); ?>
         <div id="content">
-            <img id="content-demo" src="demo-img.png" alt="demo" />
+            <div id="content-exp" style="">
             <div id="content-exp-keygen">
                 <div class="title">• Secure Keygen</div>
                 <p>Generate a keyfile containing an access token derived from a secret specific to your user account and securely signed with an elliptic curve algorithm using a master key to prevent forgery. Keyfiles may be encrypted with a secondary passphrase for additional security.</p>
@@ -48,6 +52,10 @@
             <div id="content-exp-analytics">
                 <div class="title">• Key Usage Analytics</div>
                 <p>From the My Account page, view a comprehensive log of all sign-in attempts involving your key(s) including querying host, queries per host, and return status of each request. You can also block a host from using your keys completely, which causes authentication from that host to always fail whether the key is valid or not.</p>
+            </div>
+        </div>
+        <div id="content-demo-container" style="width:50%;">
+                <img id="content-demo" src="demo-img.png" alt="demo" />
             </div>
         </div>
         <?php include_once("portions/compliance.php"); ?>
