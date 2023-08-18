@@ -152,30 +152,45 @@ tinyauth_close(&k);
 # deserialize credentials packet (length-prepended)
 
 # get user id
-segment_len = data[0:3]
-data = data[3:]
-if len(data) > segment_len:
-    userid = data[:segment_len]
-    data = data[segment_len:]     # trim
-else: return
+if len(data) > 3:
+    # data len should be &gt; size word len
+    segment_len = data[0:3]
+    data = data[3:]     # trim size word
+    if len(data) > segment_len:
+        # data len should be &gt; segment len
+        userid = data[:segment_len]
+        data = data[segment_len:]       # trim segment
+    else: raise Exception("serialization error")
+else raise Exception("serialization error")
 
 # get token
-segment_len = data[0:3]
-data = data[3:]
-if len(data) >= segment_len:
-    token = data[:segment_len]
-    data = data[segment_len:]       # trim
-else: return
+if len(data) > 3:
+    # data len should be &gt; size word len
+    segment_len = data[0:3]
+    data = data[3:]     # trim size word
+    if len(data) >= segment_len:
+        data len should be &gt; segment len
+        token = data[:segment_len]
+        data = data[segment_len:]       # trim segment
+    else: raise Exception("serialization error")
+else: raise Exception("serialization error")
 
 # conditional get otp
 otp = ""
 if len(data):
-    segment_len = data[0:3]
-    data = data[3:]
-    if len(data) == segment_len:
-        otp = data[:segment_len]
-    else: return
-# ^ you can wrap size word read in `if` statements as well if you desire</pre>
+    # this segment is optional
+    if len(data) > 3:
+        # data len should be &gt; size word len
+        segment_len = data[0:3]
+        if segment_len != 6: raise Exception("serialization error")
+        # ^ TOTP code should be 6 digits
+        data = data[3:]     # trim size word
+        if len(data) == segment_len:
+            # data len should be == segment len
+            otp = data[:segment_len]
+            # no need to trim, we&apos;s done with data
+        else: raise Exception("serialization error")
+    else: raise Exception("serialization error")</pre>
                 </li>
             
                 <li><span class="heading"><a name="construstingpost"></a>Constructing the POST Request</span>&emsp;&emsp;<a href="#top">top</a><br />
