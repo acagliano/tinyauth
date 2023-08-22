@@ -19,12 +19,12 @@
         if($recaptcha_response["success"]){
             $newuser = filter_input(INPUT_POST, "r_username", FILTER_SANITIZE_STRING);
             $passwd = password_hash($_POST["r_password"], PASSWORD_DEFAULT);
-            $email = filter_input(INPUT_POST, "r_email", FILTER_SANITIZE_EMAIL);
+            $email = filter_input(INPUT_POST, "r_email", FILTER_VALIDATE_EMAIL);
             $secret = random_bytes(64);
+            $secret_2fa = trim(Base32::encodeUpper(random_bytes(32)), "=");
             $timestamp = date("Y-m-d H:i:s");
             $admin = false;
             $flags_default = 0;
-            $secret_2fa="";
             $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
             if (!$conn->connect_error) {
                 $check_user_stmt = $conn->prepare("SELECT user FROM credentials WHERE user=?");
@@ -33,14 +33,14 @@
                 $existing_result = $check_user_stmt->get_result();
                 $rows = $existing_result->fetch_all(MYSQLI_ASSOC);
                 if(count($rows)==0){
-                    $register_user_stmt = $conn->prepare("INSERT INTO credentials (`user`, `password`, `email`, `secret`, `secret_creation_ts`, `administrator`, `notify_flags`, `2fa_flags`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                    $register_user_stmt->bind_param("sssssiii", $newuser, $passwd, $email, $secret, $timestamp, $admin, $flags_default, $flags_default);
+                    $register_user_stmt = $conn->prepare("INSERT INTO credentials (`user`, `password`, `email`, `secret`, `secret_creation_ts`, `administrator`, `notify_flags`, `2fa_flags`,`2fa_secret`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $register_user_stmt->bind_param("sssssiiis", $newuser, $passwd, $email, $secret, $timestamp, $admin, $flags_default, $flags_default, $secret_2fa);
                     if($register_user_stmt->execute()){
                         $r_errors[] = "User successfully registered";
                         load_user($conn, $newuser);
                         $sendgrid = new SendGrid($env['SENDGRID_API_KEY']);
                         $email_obj    = new SendGrid\Mail\Mail();
-                        $email_obj->setFrom("admin@cagstech.com");
+                        $email_obj->setFrom($env["NOTIFY_EMAIL_FROM"]);
                         $email_obj->setSubject("Welcome to TInyAuth");
                         $email_obj->addTo($email);
                         $email_obj->addContent("text/html", file_get_contents("emails/welcome-msg.dat"));
@@ -63,11 +63,11 @@
     }
     if(isset($_POST["l_submit"])){
         $l_errors = array();
-        $user = $_POST["l_username"];
+        $user = filter_input(INPUT_POST, "l_username", FILTER_SANITIZE_EMAIL);
         $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
         if (!$conn->connect_error) {
-            $check_user_stmt = $conn->prepare("SELECT password,2fa_flags,2fa_secret FROM credentials WHERE user=?");
-            $check_user_stmt->bind_param("s", $user);
+            $check_user_stmt = $conn->prepare("SELECT password,2fa_flags,2fa_secret FROM credentials WHERE user=? OR email=?");
+            $check_user_stmt->bind_param("ss", $user, $user);
             $check_user_stmt->execute();
             $result = $check_user_stmt->get_result();
             $row = $result->fetch_assoc();
@@ -114,7 +114,7 @@
             session_set_cookie_params(300,"/");
             $sendgrid = new SendGrid($env['SENDGRID_API_KEY']);
             $email_obj    = new SendGrid\Mail\Mail();
-            $email_obj->setFrom("admin@cagstech.com");
+            $email_obj->setFrom($env["NOTIFY_EMAIL_FROM"]);
             $email_obj->setSubject("TInyAuth - Account Recovery Requested");
             $email_obj->addTo($email);
             $email_obj->addContent("text/html", '<table><tr><td><span style=\"font-weight:bold;\">A password reset has been requested for the TInyAuth account linked to this email. If this was not you, it is advised that you verify that your email account is secure.</span><br /><br /></td></tr><tr><td>Recover your account by pasting the following link into your browser&apos;s address bar: https://tinyauth.cagstech.com/scripts/reset_password.php?email='.$email.'<br />Your Email Validation Code is: <span style="font-weight:bold; font-size:18px; color:blue;">'.$email_otp.'</span><br /><br /></td></tr><tr><td>This link will remain valid for 5 minutes. If you have configured 2FA for password recovery on your account, a OTP provided by your TOTP client will be required.</td></tr></table>');

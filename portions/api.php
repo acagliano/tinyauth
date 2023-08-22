@@ -31,11 +31,12 @@
                 <tr><td>&emsp;&emsp;2.&emsp;Extracting Credentials</td><td><a href="#extractingcreds">goto</a></td></tr>
                 <tr><td>&emsp;&emsp;3.&emsp;Prompting for 2FA</td><td><a href="#prompting2fa">goto</a></td></tr>
                 <tr><td>&emsp;&emsp;4.&emsp;Serializing for Transfer</td><td><a href="#serializingxfer">goto</a></td></tr>
-                <tr><td>&emsp;&emsp;5.&emsp;The TInyAuth Static Library</td><td><a href="#staticlib">goto</a></td></tr>
+                <tr><td>&emsp;&emsp;5.&emsp;Client-Side Library</td><td><a href="#clientlib">goto</a></td></tr>
                 <tr><td>B.&emsp;Server-Side</td><td><a href="#serverside">goto</a></td></tr>
                 <tr><td>&emsp;&emsp;1.&emsp;De-serializing Credentials</td><td><a href="#deserializing">goto</a></td></tr>
                 <tr><td>&emsp;&emsp;2.&emsp;Constructing the POST Request</td><td><a href="#constructingpost">goto</a></td></tr>
                 <tr><td>&emsp;&emsp;3.&emsp;Processing the Response</td><td><a href="#processingresp">goto</a></td></tr>
+                <tr><td>&emsp;&emsp;3.&emsp;Server-Side Library</td><td><a href="#serverlib">goto</a></td></tr>
             </table>
 
             <h1>API Documentation</h1>
@@ -99,7 +100,7 @@ where: Credentials, Tag = Cipher(AES-256-GCM,
                     Once the keyfile data has been processed, the client then needs to transfer it to the server in an understandable format. The recommended means of doing so involves encoding the credentials as length-prepended strings. Zero-termination is not reliable since you cannot guarantee that the token string will not contain a zero byte somewhere. You are not restricted to this serialization format, just make sure that whatever serialization method you use, you de-serialize using an appropriate algorithm on the server.
                 </li><br />
                 <li>
-                    <span class="heading"><a name="staticlib"></a>The TInyAuth Static Library</span>&emsp;&emsp;<a href="#top">top</a><br />
+                    <span class="heading"><a name="clientlib"></a>Client-Side Library</span>&emsp;&emsp;<a href="#top">top</a><br />
                     We have made available a static library to handle all of the aforementioned keyfile decoding and serialization. This leaves the application developer to handle only keyfile selection and actual transmission of data. The library is available at the <a href="https://github.com/acagliano/tinyauth/tree/ccbe57e3f7f2c0c0cde1baea2d3f2b1c51b617c3/client-library" target="_blank">TInyAuth Github</a>. NOTE: Requires <a href="https://github.com/acagliano/cryptx">Cryptx</a> library. Use of the library API is quite simple:
                     <pre>
 #include &lt;fileioc.h&gt;
@@ -216,7 +217,6 @@ response = requests.post(
 )</pre>
 
                 </li>
-
                 <li><span class="heading"><a name="processingresp"></a>Processing the Response</span>&emsp;&emsp;<a href="#top">top</a><br />
                 The response is an HTTP status code as well as a JSON object. To make matters simple you can interpret a 200 status code as success, a 4XX as an authentication failure, and a 5XX as an error. Alternatively, you can interpret the JSON response to determine exactly what error took place. This is recommended. See the Python code excerpt below.
                 <pre>
@@ -229,6 +229,22 @@ else:
     // if error string unset, credentials were incorrect
     // else, internal error most likely</pre>
                 </li>
+
+                <li><span class="heading"><a name="serverlib"></a>Server-Side Library</span>&emsp;&emsp;<a href="#top">top</a><br />
+                A Python module exists to allow users to bypass much of this using a class which takes the origin IP and the data bytearray received from the client as initialization parameters. Simply create an instance of the TInyAuth class with the required parameters, then call the query method as shown below.
+                <pre>
+# assume received data is in 'data' and origin IP is in self.addr[0]
+import tinyauth
+
+me = TInyAuth(self.addr[0], data)
+response = me.query()
+if response.json["success"]:
+    // user is authenticated
+else:
+    // user is not authenticated</pre>
+The module can be downloaded from the <a href="https://github.com/acagliano/tinyauth/tree/ccbe57e3f7f2c0c0cde1baea2d3f2b1c51b617c3/client-library" target="_blank">TInyAuth Github</a>, placed into your project directory (or an include path) and then imported for use.
+                </li>
+    
 </ol>
     <p>It&apos;s really that simple.</p>
         </div>

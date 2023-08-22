@@ -12,7 +12,7 @@
                 flex-direction:row; justify-content:space-around;}
 
             #content-exp {
-                width:45%; display:flex; flex-direction:column; justify-content:space-around;
+                width:45%; height:100%; display:flex; flex-direction:column; justify-content:flex-start; overflow:auto;
             }
             #content-demo-container {display:flex; align-items:center; justify-content:center;}
             #content-exp>div{
@@ -20,6 +20,7 @@
                 font-size:calc(8px + 0.5vw);
                 padding:5px;
                 color:white;
+                margin:4% auto;
             }
             #content div .title{color:goldenrod; font-weight:bold; font-size:120%; margin-bottom:5px;}
             #content>div>p {margin:0 10px;}
@@ -48,10 +49,6 @@
             <div id="content-exp-devs">
                 <div class="title">• Easy for Developers</div>
                 <p>Service developers can use <a href="https://acagliano.github.io/cryptx/">CryptX</a> to extract credentials on the client and a simple POST request on the server to authenticate user credentials with TInyAuth.</p>
-            </div>
-            <div id="content-exp-analytics">
-                <div class="title">• Key Usage Analytics</div>
-                <p>From the My Account page, view a comprehensive log of all sign-in attempts involving your key(s) including querying host, queries per host, and return status of each request. You can also block a host from using your keys completely, which causes authentication from that host to always fail whether the key is valid or not.</p>
             </div>
         </div>
         <div id="content-demo-container" style="width:50%;">
