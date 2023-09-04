@@ -1,8 +1,8 @@
 <?php
 
     require 'vendor/autoload.php';
-    use Sendgrid\Mail\Mail;
-    use OTPHP\TOTP;
+    use \Sendgrid\Mail\Mail;
+    use \OTPHP\TOTP;
     $email_file = "";
 
     $http_response = 401;
@@ -63,7 +63,7 @@
                         if($pubkey){
                             $auth_success = openssl_verify($token, $signature, $pubkey, openssl_get_md_methods()[14]);
                             if($twof_flags>>0&1){
-                                $otp = TOTP::createFromSecret($twof_secret);
+                                $otp = \TOTP::createFromSecret($twof_secret);
                                 $otp_input = filter_input(INPUT_POST, "otp", FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
                                 if($otp_input === null || $otp_input === false) {
                                     $auth_success &= false; 
@@ -125,8 +125,8 @@
     }
 
     if($email_file != ""){
-        $sendgrid = new SendGrid($env['SENDGRID_API_KEY']);
-        $email_obj    = new SendGrid\Mail\Mail();
+        $sendgrid = new \SendGrid($env['SENDGRID_API_KEY']);
+        $email_obj    = new \SendGrid\Mail\Mail();
         $email_obj->setFrom($env["NOTIFY_EMAIL_FROM"]);
         $email_obj->setSubject("TInyAuth Authentication Attempt Alert");
         $email_obj->addTo($email);

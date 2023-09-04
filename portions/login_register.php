@@ -129,9 +129,9 @@
 
     <form id="form-register" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
         <p>New to TInyAuth? Register here to get started!</p>
-        <input type="text" name="r_username" required />
-        <input type="password" name="r_password" required />
-        <input type="email" name="r_email" required />
+        <input type="text" name="r_username" placeholder="Username" required />
+        <input type="password" name="r_password" placeholder="Password" required />
+        <input type="email" name="r_email" placeholder="Email" required />
         <div class="g-recaptcha" data-sitekey="<?php echo $env['RECAPTCHA_SITEKEY'];?>"></div>
         <input type="submit" value="Register" name="r_submit" />
         <br />
@@ -144,8 +144,8 @@
 
      <form id="form-login" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
         <p>Already have an account? Sign in here to access your dashboard!</p>
-        <input type="text" name="l_username" required />
-        <input type="password" name="l_password" required />
+        <input type="text" name="l_username" placeholder="Username/Email" required />
+        <input type="password" name="l_password" placeholder="Password" required />
         <input type="text" name="l_otp" placeholder="OTP (if enabled)" />
         <input type="submit" value="Login" name="l_submit" />
         <br />
