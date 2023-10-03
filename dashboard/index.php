@@ -34,7 +34,7 @@
         <style>
 
         </style>
-        <script src="../scripts/toggle_compliances.js"></script>
+        <script src="/tinyauth/scripts/toggle_compliances.js"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     </head>

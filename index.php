@@ -4,7 +4,7 @@
         <title>TInyAuth | TI-84+ CE Credentials Grant and Authentication</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="styles/template.css" />
+        <link rel="stylesheet" href="/tinyauth/styles/template.css" />
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <style>
@@ -32,10 +32,10 @@
                 #content-demo-container {display:none;}
             }
         </style>
-        <script src="scripts/toggle_compliances.js"></script>
+        <script src="/tinyauth/scripts/toggle_compliances.js"></script>
     </head>
     <body>
-        <?php include_once("portions/header.php"); ?>
+        <?php include_once("/tinyauth/portions/header.php"); ?>
         <div id="content">
             <div id="content-exp" style="">
             <div id="content-exp-keygen">
@@ -55,6 +55,6 @@
                 <img id="content-demo" src="demo-img.png" alt="demo" />
             </div>
         </div>
-        <?php include_once("portions/compliance.php"); ?>
+        <?php include_once("/tinyauth/portions/compliance.php"); ?>
     </body>
 </html>
