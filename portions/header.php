@@ -13,8 +13,8 @@
             <div id="infoline-nav">
                 <div id="infoline">TI-84+ CE AuthKey Issuing &amp; Authentication Service</div>
                 <div id="navigation">
-                    <div class="navitem"><a href="portions/api.php">Documentation</a></div>
-                    <div class="navitem"><a href="portions/legal.php">Legal Notices</a></div>
+                    <div class="navitem"><a href="<?php echo $_SERVER["TINYAUTH_ROOT"];?>/portions/api.php">Documentation</a></div>
+                    <div class="navitem"><a href="<?php echo $_SERVER["TINYAUTH_ROOT"]?>/portions/legal.php">Legal Notices</a></div>
                     <div class="navitem" onclick="show_compliances()">Compliance</div>
                 </div>
             </div>
