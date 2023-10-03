@@ -27,8 +27,8 @@
         <title>TInyAuth | TI-84+ CE Credentials Grant and Authentication</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="../styles/template.css" />
-        <link rel="stylesheet" href="../styles/<?php echo $style_file;?>" />
+        <link rel="stylesheet" href="/tinyauth/styles/template.css" />
+        <link rel="stylesheet" href="/tinyauth/styles/<?php echo $style_file;?>" />
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <style>
