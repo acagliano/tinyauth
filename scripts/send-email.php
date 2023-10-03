@@ -3,7 +3,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 require $_SERVER["TINYAUTH_ROOT"]."vendor/autoload.php";
-$env = parse_ini_file($_SERVER["TINYAUTH_ROOT"].".env");
+$env = parse_ini_file("/srv/ti-services/tinyauth/.env");
 
 function send_email($to, $subject, $body, $isHTML=true){
 
