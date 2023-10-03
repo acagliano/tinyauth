@@ -17,7 +17,7 @@
     if(isset($_SESSION["id"])){
         include_once $_SERVER["TINYAUTH_ROOT"]."scripts/generate-keyfile.php";
         $style_file = "dashboard.css";
-        $content_file = "dashboard.php";
+        $content_file = "user.php";
     }
 ?>
 
