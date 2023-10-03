@@ -1,9 +1,9 @@
 <?php
-
+$env = parse_ini_file(".env");
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-require $_SERVER["DOCUMENT_ROOT"].'/vendor/autoload.php';
+require "..vendor/autoload.php";
 
 function send_email($to, $subject, $body, $isHTML=true){
 
@@ -14,7 +14,7 @@ function send_email($to, $subject, $body, $isHTML=true){
     $mail->Host = 'smtp.mail.me.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'acagliano91@icloud.com';
-    $mail->Password = "fyko-azij-mcbu-jtle";
+    $mail->Password = $env["SMTP_PASSWD"];
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
 

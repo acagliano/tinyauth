@@ -10,7 +10,7 @@
         }
     }
 
-    $env = parse_ini_file(".env");
+    $env = parse_ini_file("../.env");
     session_start();
     $style_file = "login_register.css";
     $content_file = "login_register.php";

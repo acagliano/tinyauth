@@ -2,17 +2,17 @@
     use FG\ASN1\Universal\Integer;
     use FG\ASN1\Universal\OctetString;
     use FG\ASN1\Universal\Sequence;
-    require $_SERVER["DOCUMENT_ROOT"].'/vendor/autoload.php';
+    require "../vendor/autoload.php";
 
     use tivars\TIModel;
     use tivars\TIVarFile;
     use tivars\TIVarType;
     use tivars\TIVarTypes;
-    require_once $_SERVER["DOCUMENT_ROOT"]."/ti_vars_lib/src/autoloader.php";
+    require_once "../ti_vars_lib/src/autoloader.php";
 
     if(isset($_POST["generate-calc-auth"])){
         $kf_errors = array();
-        $privkey_file = $_SERVER["DOCUMENT_ROOT"]."/.secrets/privkey.pem";
+        $privkey_file = "../.secrets/privkey.pem";
         $privkey = openssl_get_privatekey(file_get_contents($privkey_file), $env["SSL_PASS"]);
         if($privkey){
             openssl_sign($_SESSION["id"].$_SESSION["api_secret"], $signature, $privkey, openssl_get_md_methods()[14]);
@@ -32,7 +32,7 @@
                 $kf_errors[] = "Binary IO error.";
                 exit();
             }
-            $output = shell_exec($_SERVER["DOCUMENT_ROOT"]."/convbin/bin/convbin -i $binfile -j bin -o $appvfile -k 8xv -n $fname 2>&1");
+            $output = shell_exec("../convbin/bin/convbin -i $binfile -j bin -o $appvfile -k 8xv -n $fname 2>&1");
             error_log($output);
             if(file_exists($appvfile)){
                 ob_clean();
