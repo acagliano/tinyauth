@@ -1,7 +1,7 @@
 <?php
-    require $_SERVER["TINYAUTH_ROOT"].'/vendor/autoload.php';
-    require $_SERVER["TINYAUTH_ROOT"].'/scripts/send_email.php';
-    $env = parse_ini_file($_SERVER["TINYAUTH_ROOT"]."/.env");
+    require $_SERVER["TINYAUTH_ROOT"].'vendor/autoload.php';
+    require $_SERVER["TINYAUTH_ROOT"].'scripts/send_email.php';
+    $env = parse_ini_file($_SERVER["TINYAUTH_ROOT"].".env");
 
     $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     $then = new DateTime($_SESSION["secret_creation_ts"]);
