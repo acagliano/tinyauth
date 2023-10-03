@@ -7,6 +7,7 @@
     use PHPMailer\PHPMailer\Exception;
     require "../vendor/autoload.php";
     include_once "../scripts/send-email.php";
+    $env = parse_ini_file("../.env");
 
     if(isset($_POST["r_submit"])){
         $r_errors = array();

@@ -1,5 +1,6 @@
 <?php
     require '../vendor/autoload.php';
+    $env = parse_ini_file("../.env");
 
     $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     $then = new DateTime($_SESSION["secret_creation_ts"]);
