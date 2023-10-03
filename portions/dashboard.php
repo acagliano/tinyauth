@@ -1,5 +1,5 @@
 <?php
-    require $_SERVER["DOCUMENT_ROOT"].'/vendor/autoload.php';
+    require '../vendor/autoload.php';
 
     $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     $then = new DateTime($_SESSION["secret_creation_ts"]);
@@ -136,10 +136,6 @@
         $update_notify_stmt->bind_param("ii", $notify_val, $_SESSION["id"]);
         $update_notify_stmt->execute();
         load_user($conn, $_SESSION["id"]);
-    }
-
-    if(isset($_POST["goto_admin"]) && $_SESSION["administrator"] == true){
-        header("Location:portions/admin.php");
     }
 
     $jsondata = json_decode(file_get_contents($_SERVER["DOCUMENT_ROOT"].'/logs/auth.json'), true);

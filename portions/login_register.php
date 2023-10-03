@@ -5,8 +5,8 @@
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
-    require $_SERVER["DOCUMENT_ROOT"].'/vendor/autoload.php';
-    include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/send-email.php";
+    require "../vendor/autoload.php";
+    include_once "../scripts/send-email.php";
 
     if(isset($_POST["r_submit"])){
         $r_errors = array();
@@ -41,7 +41,7 @@
                     if($register_user_stmt->execute()){
                         $r_errors[] = "User successfully registered";
                         load_user($conn, $newuser);
-                        send_email($email, "Welcome to TInyAuth", file_get_contents($_SERVER["DOCUMENT_ROOT"]."/emails/welcome-msg.dat"), true);
+                        send_email($email, "Welcome to TInyAuth", "../emails/welcome-msg.dat", true);
                         echo "<meta http-equiv='refresh' content='0'>";
                     } else {
                         $r_errors[] = "Error writing to database.";
