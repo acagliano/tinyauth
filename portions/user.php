@@ -1,6 +1,6 @@
 <?php
     require $_SERVER["TINYAUTH_ROOT"].'vendor/autoload.php';
-    require $_SERVER["TINYAUTH_ROOT"].'scripts/send_email.php';
+    include_once $_SERVER["TINYAUTH_ROOT"].'scripts/send_email.php';
     $env = parse_ini_file($_SERVER["TINYAUTH_ROOT"].".env");
 
     $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
