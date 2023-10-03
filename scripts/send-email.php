@@ -3,7 +3,7 @@ $env = parse_ini_file(".env");
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-require "..vendor/autoload.php";
+require "../vendor/autoload.php";
 
 function send_email($to, $subject, $body, $isHTML=true){
 
