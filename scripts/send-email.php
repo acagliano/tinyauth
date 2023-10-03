@@ -1,17 +1,44 @@
 <?php
 
-require '../vendor/autoload.php';
-$env = parse_ini_file('../.env');
-$email = $argv[1];
-$subject = $argv[2];
-$htmlcontent = file_get_contents($argv[3]);
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+require $_SERVER["DOCUMENT_ROOT"].'/vendor/autoload.php';
 
-$sendgrid = new SendGrid($env['SENDGRID_API_KEY']);
-$email_obj = new SendGrid\Mail\Mail();
-$email_obj->setFrom("admin@cagstech.com");
-$email_obj->setSubject($subject);
-$email_obj->addTo($email);
-$email_obj->addContent("text/html", $htmlcontent);
-$sendgrid->send($email_obj);
+function send_email($to, $subject, $body, $isHTML=true){
+
+    $mail = new PHPMailer(true);
+    $mail->isSMTP();
+
+    // SMTP connection settings
+    $mail->Host = 'smtp.mail.me.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'acagliano91@icloud.com';
+    $mail->Password = "fyko-azij-mcbu-jtle";
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = 587;
+
+    // Email headers config
+    $mail->setFrom("noreply@cagstech.com");
+
+    // Recipient(s)
+    if(is_array($to)){
+        foreach($to as $recip){
+            $mail->addAddress($recip);
+        }
+    }
+    else { $mail->addAddress($to); }
+
+    // Message content
+    $mail->isHTML($isHTML);
+    $mail->Subject = $subject;
+    $mail->Body = $body;
+
+    $gpg = gnupg_init();
+    
+
+    // send mail, log any errors
+    if (!$mail->send()) {error_log($mail->ErrorInfo);}
+}
 
 ?>

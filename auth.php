@@ -1,8 +1,12 @@
 <?php
 
-    require 'vendor/autoload.php';
-    use \Sendgrid\Mail\Mail;
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\SMTP;
+    use PHPMailer\PHPMailer\Exception;
     use \OTPHP\TOTP;
+    require 'vendor/autoload.php';
+
+    include_once("scripts/send-email.php");
     $email_file = "";
 
     $http_response = 401;
@@ -125,13 +129,7 @@
     }
 
     if($email_file != ""){
-        $sendgrid = new \SendGrid($env['SENDGRID_API_KEY']);
-        $email_obj    = new \SendGrid\Mail\Mail();
-        $email_obj->setFrom($env["NOTIFY_EMAIL_FROM"]);
-        $email_obj->setSubject("TInyAuth Authentication Attempt Alert");
-        $email_obj->addTo($email);
-        $email_obj->addContent("text/html", file_get_contents($email_file));
-        $sendgrid->send($email_obj);
+        send_email($email, "TInyAuth Account Activity Notice", file_get_contents($email_file), true);
     }
 
     $logline = "Authentication request from ".$log_item["querying-ip"]." for ".$log_item["origin-ip"].".";

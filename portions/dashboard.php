@@ -1,36 +1,43 @@
 <?php
-require 'vendor/autoload.php';
-use OTPHP\TOTP;
-use ParagonIE\ConstantTime\Base32;
-   $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
+    require $_SERVER["DOCUMENT_ROOT"].'/vendor/autoload.php';
+
+    $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     $then = new DateTime($_SESSION["secret_creation_ts"]);
     $now = new DateTime(date("Y-m-d H:i:s"));
     $secret_time_elapsed = $then->diff( $now );
 
     if(isset($_POST["logout"])){
-        session_destroy();
         unset($_SESSION);
+        session_destroy();
         echo "<meta http-equiv='refresh' content='0'>";
     }
 
     if(isset($_POST["update_info"])){
         $n_errors = array();
+
         if(password_verify($_POST["n_verify"], $_SESSION["password"])){
             if(isset($_POST["n_email"]) && $_POST["n_email"] != ""){
                 $email = filter_var($_POST["n_email"], FILTER_VALIDATE_EMAIL);
                 if($email){
-                    $email_update_stmt = $conn->prepare("UPDATE credentials SET email=? WHERE id=?");
-                    $email_update_stmt->bind_param("si", $email, $_SESSION["id"]);
-                    $status = $email_update_stmt->execute();
-                    if ($status === false) {
-                        $n_errors[] = "Error updating email address.";
-                    } else {
-                        $n_errors[] = "Email successfully updated!";
+                    $email_check_stmt = $conn->prepare("SELECT email FROM credentials WHERE email=?");
+                    $email_check_stmt->bind_param("s", $email);
+                    $email_check_stmt->execute();
+                    $existing_result = $email_check_stmt->get_result();
+                    $rows = $existing_result->fetch_all(MYSQLI_ASSOC);
+                    if(count($rows)==0){
+                        $email_update_stmt = $conn->prepare("UPDATE credentials SET email=? WHERE id=?");
+                        $email_update_stmt->bind_param("si", $email, $_SESSION["id"]);
+                        $status = $email_update_stmt->execute();
+                        if ($status === false) {
+                            $n_errors[] = "Error updating email address.";
+                        } else {
+                            $n_errors[] = "Email successfully updated!";
+                        }
                     }
+                    else { $n_errors[] = "Email address in use."; }
                 } else {
                     $n_errors[] = "Input email invalid.";
                 }
-
             }
             if(isset($_POST["n_password"]) && $_POST["n_password"] != ""){
                 $passwd = password_hash($_POST["n_password"], PASSWORD_DEFAULT);
@@ -46,30 +53,19 @@ use ParagonIE\ConstantTime\Base32;
         } else {
             $n_errors[] = "Invalid password provided.";
         }
-        load_user($conn, $_SESSION["user"]);
+        load_user($conn, $_SESSION["id"]);
     }
 
-    if(isset($_POST["refresh_keyfile_secret"])){
-        $secret = random_bytes(64);
+    if(isset($_POST["refresh_secret"])){
+        $api_secret = random_bytes(32);
         $timestamp = date("Y-m-d H:i:s");
-        $secret_update_stmt = $conn->prepare("UPDATE credentials SET secret=?,secret_creation_ts=? WHERE id=?");
-        $secret_update_stmt->bind_param("ssi", $secret, $timestamp, $_SESSION["id"]);
+        $secret_update_stmt = $conn->prepare("UPDATE credentials SET api_secret=?,secret_creation_ts=? WHERE id=?");
+        $secret_update_stmt->bind_param("ssi", $api_secret, $timestamp, $_SESSION["id"]);
         $status = $secret_update_stmt->execute();
         if ($status === false) {
             echo "<script>alert(\"Error writing new keyfile secret. If this issue persists, please contact system administrator.\");</script>";
         } else {
-            load_user($conn, $_SESSION["user"]);
-        }
-    }
-    if(isset($_POST["refresh_2fa_secret"])){
-        $secret = trim(Base32::encodeUpper(random_bytes(32)), "=");
-        $secret_update_stmt = $conn->prepare("UPDATE credentials SET 2fa_secret=? WHERE id=?");
-        $secret_update_stmt->bind_param("si", $secret, $_SESSION["id"]);
-        $status = $secret_update_stmt->execute();
-        if ($status === false) {
-            echo "<script>alert(\"Error writing new 2FA secret. If this issue persists, please contact system administrator.\");</script>";
-        } else {
-            load_user($conn, $_SESSION["user"]);
+            load_user($conn, $_SESSION["id"]);
         }
     }
 
@@ -87,7 +83,7 @@ use ParagonIE\ConstantTime\Base32;
     }
 
     if(isset($_POST["purge_sel"])){
-        $jsondata = json_decode(file_get_contents('logs/auth.json'), true);
+        $jsondata = json_decode(file_get_contents($_SERVER["DOCUMENT_ROOT"].'/logs/auth.json'), true);
         foreach($jsondata as $key=>$item){
             if($item["origin-ip"] != ""){
                 $listing_ip = $item["origin-ip"];
@@ -99,7 +95,7 @@ use ParagonIE\ConstantTime\Base32;
                 }
             }
         }
-        file_put_contents('logs/auth.json', json_encode($jsondata));
+        file_put_contents($_SERVER["DOCUMENT_ROOT"].'/logs/auth.json', json_encode($jsondata));
     }
 
     if(isset($_POST["block_sel"])){
@@ -139,31 +135,14 @@ use ParagonIE\ConstantTime\Base32;
         $update_notify_stmt = $conn->prepare("UPDATE credentials SET notify_flags=? WHERE id=?");
         $update_notify_stmt->bind_param("ii", $notify_val, $_SESSION["id"]);
         $update_notify_stmt->execute();
-        load_user($conn, $_SESSION["user"]);
-    }
-
-    if(isset($_POST["2fa-opts"])){
-        $notify_val = 0;
-        if($_POST["2fa-keyfile-login"] == "true"){
-            $notify_val |= (1<<0);
-        }
-        if($_POST["2fa-dashboard-login"] == "true"){
-            $notify_val |= (1<<1);
-        }
-        if($_POST["2fa-password-reset"] == "true"){
-            $notify_val |= (1<<2);
-        }
-        $update_notify_stmt = $conn->prepare("UPDATE credentials SET 2fa_flags=? WHERE id=?");
-        $update_notify_stmt->bind_param("ii", $notify_val, $_SESSION["id"]);
-        $update_notify_stmt->execute();
-        load_user($conn, $_SESSION["user"]);
+        load_user($conn, $_SESSION["id"]);
     }
 
     if(isset($_POST["goto_admin"]) && $_SESSION["administrator"] == true){
         header("Location:portions/admin.php");
     }
 
-    $jsondata = json_decode(file_get_contents('logs/auth.json'), true);
+    $jsondata = json_decode(file_get_contents($_SERVER["DOCUMENT_ROOT"].'/logs/auth.json'), true);
     $hitsarray = array();
     foreach($jsondata as $json){
         if($json["user-id"] == $_SESSION["id"]){
@@ -210,66 +189,70 @@ use ParagonIE\ConstantTime\Base32;
 ?>
 <div id="dashboard">
     <div id="details">
-        <h3 id="welcome-msg">Welcome, <?php echo $_SESSION["user"]; ?>!
-            <form style="font-size:16px;" id="logout" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
-                <input type="submit" name="logout" value="Log Out" />
-            </form>
-        </h3>
-        <p>Welcome to your Dashboard.<br />
-        Here you can change your account info, manage account secrets, generate keyfiles for your devices, track key usage analytics, and even delete your account.</p>
-        <form id="update" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
-            <h4>Update Account Information</h4>
-            New Email:<br />
-            <input type="text" name="n_email" value="<?php echo $_SESSION['email'];?>" /><br />
-            New Password:<br />
-            <input type="password" name="n_password" placeholder="new password" autocomplete="new-password" /><br />
-            Verify Current Password:<br />
-            <input type="password" name="n_verify" placeholder="current password" autocomplete="new-password" required /><br />
-             <?php
-                if(isset($n_errors)){
-                    foreach($n_errors as $error){
-                        echo $error."<br />";
-                    }
-                }
-            ?><br />
-            <input type="submit" value="Update Account" name="update_info" />
+        <form id="logout" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
+            <p style="width:100%; text-align:center; margin:0; margin-bottom:4%; padding:10px 0; background:rgba(0,0,0,.75);">WELCOME TINYAUTH USER!&emsp;&emsp;<input type="submit" name="logout" value="Log Out" /></p>
+            <p style="width:96%; margin:auto; text-align:left; width:100%; border-bottom:1px solid white;">DOWNLOADS</p>
+            <table id="downloads">
+                <col width="65%" />
+                <col width="35%" />
+                <tr><td>Calc-Auth Keyfile</td><td><input class="dl" type="submit" name="generate-calc-auth" value="generate" /></td></tr>
+            </table>
+            <?php
+            foreach($kf_errors as $e){
+                echo $e."<br />";
+            }
+            ?>
+            <p style="margin:0 2%; color:goldenrod; font-weight:bold; font-size:90%;">Your keyfile(s) faciliate authentication with TInyAuth.<br />Do not share them with others.</p>
+            <br />
+        </form>
+         <form id="update_info" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
+          <p style="width:96%; margin:auto; text-align:left; width:100%; border-bottom:1px solid white;">UPDATE INFO</p>
+        <table id="updateinfo">
+            <col width="100%" />
+            <tr>
+                <td>
+                    <input type="text" name="n_email" value="<?php echo $_SESSION['email'];?>" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="password" name="n_password" placeholder="new password" autocomplete="new-password" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="password" name="n_verify" placeholder="current password" autocomplete="new-password" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Update Account" name="update_info" />
+                </td>
+            </tr>
+        </table>
+        </form>
         </form>
         <br />
         <form id="danger" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
-            <h4>Danger Zone</h4>
-            <input type="submit" value="Regenerate Keyfile Secret" name="refresh_keyfile_secret" onclick="return confirm('This will revoke all keyfiles issued under this secret. Are you sure?');" /><br /><br />
-            <input type="submit" value="Regenerate 2FA Secret" name="refresh_2fa_secret" onclick="return confirm('You will need to reconfigure your TOTP client application. Are you sure?');" /><br /><br />
-            <input type="submit" value="Delete Account" name="delete_account" onclick="return confirm('This will permanently delete your account and revoke all keys. Are you sure?');" />
+             <p style="width:96%; margin:auto; text-align:left; width:100%; color: rgba(255, 0, 0, .8); border-bottom:1px solid rgba(255, 0, 0, .8);">DANGER ZONE</p>
+            <table id="dangerzone">
+                <tr style="height:15px;"></tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Revoke Calc-Auth Keys" name="refresh_secret" onclick="return confirm('This will revoke any Calc-Auth Keyfiles issued under the current secret. They will need to be regenerated. Are you sure?');" />
+                    </td>
+                </tr>
+                <tr style="height:15px;"></tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Delete Account" name="delete_account" onclick="return confirm('This will permanently delete your account and revoke all keys. Are you sure?');" />
+                    </td>
+                </tr>
+            </table>
         </form>
         <br />
     </div>
     <div id="more-details">
-        <form id="issue-key" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
-            <details id="keyfile-issue" open>
-            <summary><span style="font-weight:900; font-size:18px;">&emsp;Issue Keyfile</span></summary>
-            <p>You can issue pretty much as many keyfiles as you want under an account secret. Those keys will remain valid until either the account secret or the server signing key is changed.</p>
-            <p>Last Secret Refresh: <span style="background:rgba(0,0,0,1);font-weight:bold;padding:5px 10px;color:<?php
-            if($secret_time_elapsed->m < 5){
-                echo "green";
-            }
-            elseif($secret_time_elapsed->m < 6){
-                echo "orange";
-            }
-            else { echo "red"; }
-            ?>"><?php echo $_SESSION["secret_creation_ts"]; ?></span><span id="secret-ts-hover" style="position:relative; border:1px solid red; margin:0 5px; cursor:pointer; cursor:hand;">&#10067;<span id="secret-ts-exp">Color approximates secret lifespan elapsed.<br /><span style="color:green;">Green indicates significant lifespan remaining.</span><br /><span style="color:orange;">Orange indicates secret aging.</span><br /><span style="color:red;">Red indicates secret should be expired.</span></span></span>
-            </p>
-            <p style="margin:10px 5px;"><input type="password" name="kf_passphrase" placeholder="passphrase (optional)" autocomplete="new-password" />&emsp;
-            <input type="text" name="kf_name" placeholder="AppVar Name" maxlength="8" required />&emsp;
-            <input type="submit" name="kf_emit" value="Generate Keyfile" /></p>
-            <?php
-                if(isset($kf_errors)){
-                    foreach($kf_errors as $error){
-                        echo $error."<br />";
-                    }
-                }
-            ?>
-        </details>
-        </form>
         <form id="auth-log" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
         <details open>
             <summary><span style="font-weight:900; font-size:18px;">&emsp;Authentication Attempts</span>
@@ -308,7 +291,7 @@ use ParagonIE\ConstantTime\Base32;
             </table>
         </details></form>
         <form id="notify-opts" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post" style="font-size:14px;">
-        <details>
+        <details open>
             <summary><span style="font-weight:900; font-size:18px;">&emsp;Notification Settings</span>
             <input type="submit" name="notify-opts" value="Update" style="float:right; margin-right:5%;" />
             </summary>
@@ -317,28 +300,5 @@ use ParagonIE\ConstantTime\Base32;
                 &emsp;&emsp;<input type="checkbox" name="notify-auth-fail" value="true" <?php if($_SESSION["notify_flags"]>>2&1){echo "checked";}?> />&emsp;&emsp;failed authentication attempts<br />
                 &emsp;&emsp;<input type="checkbox" name="notify-auth-success" value="true" <?php if($_SESSION["notify_flags"]>>3&1){echo "checked";}?> />&emsp;&emsp;successful authentication attempts<br />
         </details></form>
-        <form id="2fa-opts" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post" style="font-size:14px;">
-        <details>
-            <summary><span style="font-weight:900; font-size:18px;">&emsp;2FA Settings</span>
-            <input type="submit" name="2fa-opts" value="Update" style="float:right; margin-right:5%;" />
-            </summary>
-                    <?php
-                        $otp = TOTP::createFromSecret($_SESSION["2fa_secret"]);
-                        $otp->setLabel($_SESSION["user"]."@TInyAuth");
-                        $otp->setIssuer("TInyAuth");
-                        $goqr_me = $otp->getQrCodeUri(
-                            'https://api.qrserver.com/v1/create-qr-code/?data=[DATA]&qzone=2&margin=0&size=300x300&ecc=M', '[DATA]');
-                        echo "<img id='qr-2fa' src='{$goqr_me}' alt='QR Code'>";
-                    ?>
-                &emsp;&emsp;<span style="font-weight:bold; font-size:105%;">Enable Two-Factor Authentication For:</span><br />
-                &emsp;&emsp;<input type="checkbox" name="2fa-keyfile-login" value="true" <?php if($_SESSION["2fa_flags"]>>0&1){echo "checked";}?> />&emsp;&emsp;keyfile authentication<br />
-                &emsp;&emsp;<input type="checkbox" name="2fa-dashboard-login" value="true" <?php if($_SESSION["2fa_flags"]>>1&1){echo "checked";}?> />&emsp;&emsp;dashboard login<br />
-                &emsp;&emsp;<input type="checkbox" name="2fa-password-reset" value="true" <?php if($_SESSION["2fa_flags"]>>2&1){echo "checked";}?> />&emsp;&emsp;password reset<br />
-                <hr />
-                &emsp;&emsp;Scan the QR Code to the right to add to your TOTP application of choice.<br />
-                &emsp;&emsp;Alternatively, you can manually enter the secret below.<br />
-                &emsp;&emsp;<span style="color:red; font-weight:bold;">Do not share your secret or QR code with others.</span><br />
-                &emsp;&emsp;SECRET: <span style="font-family:monospace; font-size:90%;"><?php echo $_SESSION["2fa_secret"]; ?></span>
-        </details></form>
-    </div>
+     </div>
 </div>

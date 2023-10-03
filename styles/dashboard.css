@@ -33,8 +33,65 @@
     padding: 5px 10px;
 }
 
-#details>p {
-    margin: 10px;
+#details>form {
+    font-size: 16px;
+    width: 100%;
+    margin: 0;
+}
+
+#details>form>table {
+    width: 96%;
+    margin: 1% auto;
+    border-collapse: collapse;
+    color: white;
+}
+
+#downloads input[type=submit] {
+    background: rgba(114, 160, 193, .75);
+    border-radius: 0;
+    border: none;
+    padding: 0 20px;
+    display: inline-block;
+    cursor: pointer;
+    cursor: hand;
+    color: white;
+}
+
+#downloads input[type=submit]:hover {
+    background: rgba(114, 160, 193, .95);
+}
+
+#updateinfo input,
+#dangerzone input {
+    width: 90%;
+    background-color: rgba(0, 0, 0, .25);
+    border: none;
+    outline: none;
+    color: white;
+}
+
+#updateinfo input[type=submit] {
+    background-color: rgba(114, 160, 193, .5);
+    cursor: pointer;
+    cursor: hand;
+}
+
+#updateinfo input[type=submit]:hover {
+    background-color: rgba(114, 160, 193, .62);
+}
+
+#dangerzone {
+    color: rgba(255, 0, 0, .9);
+}
+
+#dangerzone input[type=submit] {
+    background-color: rgba(255, 0, 0, .6);
+    cursor: pointer;
+    cursor: hand;
+}
+
+#dangerzone input[type=submit]:hover {
+    background-color: rgba(255, 0, 0, .85);
 }
 
 #update {
@@ -44,12 +101,6 @@
     padding: 10px;
 }
 
-#danger {
-    width: 95%;
-    margin: 0 auto;
-    background: rgba(255, 0, 0, .5);
-    padding: 10px;
-}
 
 #danger input,
 #update input {
