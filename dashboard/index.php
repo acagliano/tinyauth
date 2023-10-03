@@ -34,15 +34,15 @@
         <style>
 
         </style>
-        <script src="scripts/toggle_compliances.js"></script>
+        <script src="../scripts/toggle_compliances.js"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     </head>
     <body>
-        <?php include_once "portions/header.php"; ?>
+        <?php include_once "../portions/header.php"; ?>
         <div id="content">
-            <?php include_once "portions/".$content_file; ?>
+            <?php include_once "../portions/".$content_file; ?>
         </div>
-        <?php include_once "portions/compliance.php"; ?>
+        <?php include_once "../portions/compliance.php"; ?>
     </body>
 </html>
