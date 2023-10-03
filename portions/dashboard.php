@@ -1,6 +1,6 @@
 <?php
     require '../vendor/autoload.php';
-    $env = parse_ini_file("../.env");
+    $env = parse_ini_file($_SERVER["TINYAUTH_ROOT"]."/.env");
 
     $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     $then = new DateTime($_SESSION["secret_creation_ts"]);
@@ -67,6 +67,7 @@
             echo "<script>alert(\"Error writing new keyfile secret. If this issue persists, please contact system administrator.\");</script>";
         } else {
             load_user($conn, $_SESSION["id"]);
+            send_email($_SESSION["email"], "TInyAuth Account Secret Renewal Notice", file_get_contents($_SERVER["TINYAUTH_ROOT"]."/emails/secret-update-msg.dat"), true);
         }
     }
 
