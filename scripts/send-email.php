@@ -1,9 +1,9 @@
 <?php
-$env = parse_ini_file($_SERVER["TINYAUTH_ROOT"]."/.env");
+$env = parse_ini_file($_SERVER["TINYAUTH_ROOT"].".env");
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-require $_SERVER["TINYAUTH_ROOT"]."/vendor/autoload.php";
+require $_SERVER["TINYAUTH_ROOT"]."vendor/autoload.php";
 
 function send_email($to, $subject, $body, $isHTML=true){
 
