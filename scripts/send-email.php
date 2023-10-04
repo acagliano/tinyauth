@@ -6,7 +6,7 @@ require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 
 function send_email($to, $subject, $body, $isHTML=true){
 
-    $env = parse_ini_file($_SERVER["DOCUMENT_ROOT"].".env");
+    $env = parse_ini_file($_SERVER["DOCUMENT_ROOT"]."/.env");
     $mail = new PHPMailer(true);
     $mail->isSMTP();
 
