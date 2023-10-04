@@ -1,6 +1,6 @@
 <?php
-    require $_SERVER["DOCUMENT_ROOT"].'vendor/autoload.php';
-    include_once $_SERVER["DOCUMENT_ROOT"].'scripts/send-email.php';
+    require $_SERVER["DOCUMENT_ROOT"].'/vendor/autoload.php';
+    include_once $_SERVER["DOCUMENT_ROOT"].'/scripts/send-email.php';
     $env = parse_ini_file($_SERVER["DOCUMENT_ROOT"].".env");
 
     $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
