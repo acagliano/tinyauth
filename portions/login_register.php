@@ -5,9 +5,9 @@
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
-    require $_SERVER["TINYAUTH_ROOT"]."/vendor/autoload.php";
-    include_once $_SERVER["TINYAUTH_ROOT"]."/scripts/send-email.php";
-    $env = parse_ini_file($_SERVER["TINYAUTH_ROOT"]."/.env");
+    require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
+    include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/send-email.php";
+    $env = parse_ini_file($_SERVER["DOCUMENT_ROOT"]."/.env");
 
     if(isset($_POST["r_submit"])){
         $r_errors = array();

@@ -10,12 +10,12 @@
         }
     }
 
-    $env = parse_ini_file($_SERVER["TINYAUTH_ROOT"].".env");
+    $env = parse_ini_file($_SERVER["DOCUMENT_ROOT"].".env");
     session_start();
     $style_file = "login_register.css";
     $content_file = "login_register.php";
     if(isset($_SESSION["id"])){
-        include_once $_SERVER["TINYAUTH_ROOT"]."scripts/generate-keyfile.php";
+        include_once $_SERVER["DOCUMENT_ROOT"]."scripts/generate-keyfile.php";
         $style_file = "dashboard.css";
         $content_file = "user.php";
     }
@@ -39,10 +39,10 @@
 
     </head>
     <body>
-        <?php include_once $_SERVER["TINYAUTH_ROOT"]."portions/header.php"; ?>
+        <?php include_once $_SERVER["DOCUMENT_ROOT"]."portions/header.php"; ?>
         <div id="content">
-            <?php include_once $_SERVER["TINYAUTH_ROOT"]."portions/".$content_file; ?>
+            <?php include_once $_SERVER["DOCUMENT_ROOT"]."portions/".$content_file; ?>
         </div>
-        <?php include_once $_SERVER["TINYAUTH_ROOT"]."portions/compliance.php"; ?>
+        <?php include_once $_SERVER["DOCUMENT_ROOT"]."portions/compliance.php"; ?>
     </body>
 </html>

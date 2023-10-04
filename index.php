@@ -35,7 +35,7 @@
         <script src="/tinyauth/scripts/toggle_compliances.js"></script>
     </head>
     <body>
-        <?php include_once($_SERVER["TINYAUTH_ROOT"]."portions/header.php"); ?>
+        <?php include_once($_SERVER["DOCUMENT_ROOT"]."portions/header.php"); ?>
         <div id="content">
             <div id="content-exp" style="">
             <div id="content-exp-keygen">
@@ -55,6 +55,6 @@
                 <img id="content-demo" src="demo-img.png" alt="demo" />
             </div>
         </div>
-        <?php include_once($_SERVER["TINYAUTH_ROOT"]."portions/compliance.php"); ?>
+        <?php include_once($_SERVER["DOCUMENT_ROOT"]."portions/compliance.php"); ?>
     </body>
 </html>
