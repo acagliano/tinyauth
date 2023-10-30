@@ -2,6 +2,8 @@ form {
     width: 90%;
     margin: auto;
     height: 45%;
+    color: white;
+    background: rgba(0, 0, 0, .5);
 }
 
 input[type=text],
