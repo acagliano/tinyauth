@@ -114,7 +114,7 @@
 
     <form id="form-register" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
         <p>New to TInyAuth? Register here to get started!</p>
-         <input type="email" name="r_email" placeholder="Email" required />
+        <input type="email" name="r_email" placeholder="Email" required />
         <input type="password" name="r_password" placeholder="Password" required />
         <div class="g-recaptcha" data-sitekey="<?php echo $env['RECAPTCHA_SITEKEY'];?>"></div>
         <input type="submit" value="Register" name="r_submit" />

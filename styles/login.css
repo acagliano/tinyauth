@@ -1,0 +1,10 @@
+form {
+    width: 90%;
+    margin: auto;
+    height: 45%;
+}
+
+input[type=text],
+input[type=password] {
+    width: 90%;
+}
