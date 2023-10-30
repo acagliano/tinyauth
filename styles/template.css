@@ -21,7 +21,7 @@
 
  body {
      display: flex;
-     flex-direction: column;
+     flex-direction: row;
      background: rgb(105, 105, 105);
      background: radial-gradient(circle, rgba(48, 48, 48, .80) 0%, rgba(48, 48, 48, 1) 100%);
      background: -moz-radial-gradient(circle, rgba(48, 48, 48, .80) 0%, rgba(48, 48, 48, 1) 100%);
@@ -29,7 +29,7 @@
  }
 
  #header {
-     flex: 0;
+     flex: 2;
      position: relative;
      background: rgba(255, 255, 255, 1);
      width: 100%;
