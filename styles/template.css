@@ -81,11 +81,11 @@
      width: 60%;
      margin: 5% auto;
      padding: 2%;
-     background: rgba(0, 0, 0, .1);
  }
 
  #login>input {
      width: 100%;
+     background: rgba(0, 0, 0, .1);
  }
 
  #navigation {
