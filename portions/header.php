@@ -2,14 +2,12 @@
             <!--<div id="ta-icon"><img id="ta-img" src="/ta-logo.png" /></div>-->
             <div id="title">TInyAuth</div>
             <div id="infoline">Key-Based Authentication<br />for the TI-84+ CE</div>
-            <div id="login">
-                <form action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
-                        <input type="email" name="email" placeholder="Email" required />
-                        <input type="password" name="password" placeholder="Password" required />
-                        <div class="g-recaptcha" data-sitekey="<?php echo $env['RECAPTCHA_SITEKEY'];?>"></div>
-                        <input type="submit" value="Login" name="submit" />
+            <form id="login" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
+                <input type="email" name="email" placeholder="Email" required />
+                <input type="password" name="password" placeholder="Password" required />
+                <div class="g-recaptcha" data-sitekey="<?php echo $env['RECAPTCHA_SITEKEY'];?>"></div>
+                <input type="submit" value="Login" name="submit" />
                 </form>
-                <div>
             <div id="navigation">
                     <div class="navitem"><a href="/portions/api.php">Documentation</a></div>
                     <div class="navitem"><a href="/portions/legal.php">Legal Notices</a></div>
