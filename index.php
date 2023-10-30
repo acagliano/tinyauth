@@ -63,7 +63,7 @@
     <body>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/header.php"); ?>
         <div id="content">
-            <?php include_once $_SERVER["DOCUMENT_ROOT"]."/portions/".$content_file; ?>
+            This is some content
         </div>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/compliance.php"); ?>
     </body>

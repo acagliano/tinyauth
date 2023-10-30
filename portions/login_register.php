@@ -109,46 +109,5 @@
         }
     }
 ?>
-
-<div id="forms">
-
-    <form id="form-register" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
-        <p>New to TInyAuth? Register here to get started!</p>
-        <input type="email" name="r_email" placeholder="Email" required />
-        <input type="password" name="r_password" placeholder="Password" required />
-        <div class="g-recaptcha" data-sitekey="<?php echo $env['RECAPTCHA_SITEKEY'];?>"></div>
-        <input type="submit" value="Register" name="r_submit" />
-        <br />
-        <?php
-            foreach($r_errors as $error){
-                echo $error."<br />";
-            }
-        ?>
-    </form>
-
-     <form id="form-login" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
-        <p>Already have an account? Sign in here to access your dashboard!</p>
-        <input type="text" name="l_username" placeholder="Email" required />
-        <input type="password" name="l_password" placeholder="Password" required />
-        <input type="text" name="l_otp" placeholder="OTP (if enabled)" />
-        <input type="submit" value="Login" name="l_submit" />
-        <br />
-        <?php
-            foreach($l_errors as $error){
-                echo $error."<br />";
-            }
-        ?>
-        <hr />
-        <p>Forgot your password? Don&apos;t worry.<br /><a style="text-decoration:underline; cursor:pointer; cursor:hand;" onclick="document.getElementById('reset-pass').style.display='block';">Reset Password</a></p>
-    </form>
-
-    <div id="reset-pass">
-    <div id="reset-pass-close" onclick="document.getElementById('reset-pass').style.display='none';">X</div>
-    <form action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
-        <br />
-        <input type="text" name="pwr_email" placeholder="Account Email Address" required />
-        <input type="submit" name="pwr_email_otp" value="Send Account Recovery Link" />
-        <br />
-    </form>
 </div>
 </div>
