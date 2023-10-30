@@ -29,7 +29,7 @@
  }
 
  #header {
-     flex: 3 0 100%;
+     flex: 3;
      position: relative;
      background: rgba(255, 255, 255, 1);
      height: 100%;
