@@ -37,7 +37,7 @@
      box-shadow: 2px 2px 10px black;
      display: flex;
      flex-direction: column;
-     justify-content: space-between;
+     justify-content: flex-start;
  }
 
  #header>* {
