@@ -1,6 +1,7 @@
 <div id="header">
             <!--<div id="ta-icon"><img id="ta-img" src="/ta-logo.png" /></div>-->
             <div id="title">TInyAuth</div>
+            <div id="infoline">TI-84+ CE<br />Authentication Service</div>
             <div id="home-dash-toggle">
                 <div id="home-button"><a href="/">
                         <div class="w3-blue-gray w3-large"><i class="fa fa-home"></i> Home</div>
