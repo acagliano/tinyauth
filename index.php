@@ -29,7 +29,6 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="/styles/template.css" />
-         <link rel="stylesheet" href="/styles/<?php echo $style_file;?>" />
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <style>
@@ -64,10 +63,6 @@
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/header.php"); ?>
         <div id="content">
             <?php include_once $_SERVER["DOCUMENT_ROOT"]."/portions/".$content_file; ?>
-        </div>
-        <div id="content-demo-container" style="width:50%;">
-                <img id="content-demo" src="demo-img.png" alt="demo" />
-            </div>
         </div>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/compliance.php"); ?>
     </body>
