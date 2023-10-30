@@ -1,3 +1,27 @@
+
+<?php
+    function load_user($conn, $id){
+        $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE id=?");
+        $load_user_stmt->bind_param("s", $id);
+        $load_user_stmt->execute();
+        $result = $load_user_stmt->get_result();
+        $row = $result->fetch_assoc();
+        foreach($row as $key=>$value){
+            $_SESSION[$key] = $value;
+        }
+    }
+
+    $env = parse_ini_file($_SERVER["DOCUMENT_ROOT"]."/.env");
+    session_start();
+    $style_file = "login_register.css";
+    $content_file = "login_register.php";
+    if(isset($_SESSION["id"])){
+        include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php";
+        $style_file = "dashboard.css";
+        $content_file = "user.php";
+    }
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -5,6 +29,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="/styles/template.css" />
+         <link rel="stylesheet" href="/styles/<?php echo $style_file;?>" />
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <style>
@@ -33,23 +58,12 @@
             }
         </style>
         <script src="/scripts/toggle_compliances.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </head>
     <body>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/header.php"); ?>
         <div id="content">
-            <div id="content-exp" style="">
-            <div id="content-exp-keygen">
-                <div class="title">• Secure Keygen</div>
-                <p>Generate a keyfile containing an access token derived from a secret specific to your user account and securely signed with an elliptic curve algorithm using a master key to prevent forgery. Keyfiles may be encrypted with a secondary passphrase for additional security.</p>
-            </div>
-            <div id="content-exp-easy">
-                <div class="title">• Easy for End Users</div>
-                <p>Connect to any game (or other) service for the TI-84+ CE that supports TInyAuth and your credentials are extracted from your keyfile with no user input required.</p>
-            </div>
-            <div id="content-exp-devs">
-                <div class="title">• Easy for Developers</div>
-                <p>Service developers can use <a href="https://acagliano.github.io/cryptx/">CryptX</a> to extract credentials on the client and a simple POST request on the server to authenticate user credentials with TInyAuth.</p>
-            </div>
+            <?php include_once $_SERVER["DOCUMENT_ROOT"]."/portions/".$content_file; ?>
         </div>
         <div id="content-demo-container" style="width:50%;">
                 <img id="content-demo" src="demo-img.png" alt="demo" />
