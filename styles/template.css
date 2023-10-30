@@ -40,6 +40,11 @@
      justify-content: flex-start;
  }
 
+ #header>* {
+     width: 100%;
+     text-align: center;
+ }
+
  #ta-icon {
      width: auto;
      flex: 0;
