@@ -1,6 +1,5 @@
 <div id="header">
             <!--<div id="ta-icon"><img id="ta-img" src="/ta-logo.png" /></div>-->
-            <div></div>
             <div id="title">TInyAuth</div>
             <div id="home-dash-toggle">
                 <div id="home-button"><a href="/">
