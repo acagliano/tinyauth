@@ -23,6 +23,7 @@ if(isset($_POST["login"])){
                 echo "<input type=\"email\" name=\"email\" value=\"".$email."\" readonly />";
                 echo "<input type=\"password\" name=\"password\" value=\"".$_POST["password"]."\" readonly />";
                 echo "<input type=\"submit\" name=\"register\" value=\"Register\" />";
+                echo "</form>";
             }
             else {
                 if(password_verify($_POST["password"], $row["password"])){
