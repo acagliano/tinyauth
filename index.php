@@ -80,7 +80,7 @@ if(isset($_POST["login"])){
             <h3>Oauth2 Backend</h3>
             <p>When completed, TInyAuth will implement an Oauth2.0 backend. Users will download a credentialing keyfile from their dashboard which lets their calculator authenticate with TInyAuth on request from a third party application.</p><br />
             <h3>Secure Keyfiles</h3>
-            <p>Credentialing keyfiles are generated using a secure elliptic curve algorithm and digitally-signed by TInyAuth to prevent forgery. Keys are valid for 6 months.</p><br />
+            <p>Credentialing keyfiles are digitally-signed by TInyAuth to prevent forgery. Keys are valid for 1 year. Users may issue multiple keys against their account secret if needed.</p><br />
         </div>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/compliance.php"); ?>
     </body>
