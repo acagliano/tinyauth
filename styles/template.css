@@ -166,7 +166,7 @@
      color: white;
  }
 
- #content>p {
+ #content>* {
      margin: 5px 25px;
  }
 
