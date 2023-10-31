@@ -95,6 +95,10 @@ if(isset($_POST["login"])){
         <script src="/scripts/toggle_compliances.js"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script>
+            
+            function onLogin(token) {
+                document.getElementById("login").submit();
+            }
         </script>
     </head>
     <body>
