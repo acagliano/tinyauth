@@ -6,7 +6,7 @@
                 <input type="email" name="email" placeholder="Email" required />
                 <input type="password" name="password" placeholder="Password" required />
                 <div class="g-recaptcha" data-sitekey="<?php echo $env['RECAPTCHA_SITEKEY'];?>"></div>
-                <input type="submit" value="Login" name="submit" />
+                <button class="g-recaptcha" data-sitekey="reCAPTCHA_site_key" data-callback='onSubmit'  data-action='onLogin'>Submit</button>
         </form>
         <div id="navigation">
                 <div class="navitem"><a href="/portions/api.php">Documentation</a></div>

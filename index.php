@@ -1,5 +1,17 @@
 
 <?php
+
+    use OTPHP\TOTP;
+    use ParagonIE\ConstantTime\Base64;
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\SMTP;
+    use PHPMailer\PHPMailer\Exception;
+    $env = parse_ini_file($_SERVER["DOCUMENT_ROOT"]."/.env");
+    require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
+
+    include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/login.php";
+    include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/send-email.php";
+
     function load_user($conn, $id){
         $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE id=?");
         $load_user_stmt->bind_param("s", $id);
@@ -10,14 +22,10 @@
             $_SESSION[$key] = $value;
         }
     }
-
-    $env = parse_ini_file($_SERVER["DOCUMENT_ROOT"]."/.env");
     session_start();
-    $style_file = "login_register.css";
-    $content_file = "login_register.php";
     if(isset($_SESSION["id"])){
         include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php";
-        $style_file = "dashboard.css";
+        //$style_file = "dashboard.css";
         $content_file = "user.php";
     }
 ?>
@@ -58,6 +66,11 @@
         </style>
         <script src="/scripts/toggle_compliances.js"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script>
+            function onLogin(token) {
+                document.getElementById("login").submit();
+            }
+        </script>
     </head>
     <body>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/header.php"); ?>
