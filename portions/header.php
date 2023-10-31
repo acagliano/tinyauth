@@ -6,7 +6,7 @@
                 <p>Login to access Account Dashboard</p>
                 <input type="email" name="email" placeholder="Email" required />
                 <input type="password" name="password" placeholder="Password" required />
-                <input type="submit" name="login" value="Login" />>
+                <input type="submit" name="login" value="Login" />
                 <?php
                 foreach($l_errors as $l){
                         echo $l."<br />";
