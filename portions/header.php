@@ -2,7 +2,7 @@
         <!--<div id="ta-icon"><img id="ta-img" src="/ta-logo.png" /></div>-->
         <div id="title">TInyAuth</div>
         <div id="infoline">Key-Based Authentication<br />for the TI-84+ CE</div>
-        <form id="login" action="scripts/login.php" method="post">
+        <form id="login" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
                 <p>Login to access Account Dashboard</p>
                 <input type="email" name="email" placeholder="Email" required />
                 <input type="password" name="password" placeholder="Password" required />
