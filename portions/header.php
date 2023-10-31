@@ -7,8 +7,8 @@
                 echo "<form id=\"logout\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                 echo "<input type=\"submit\" name=\"logout\" value=\"Log Out\" />";
                 if (isset($_SESSION["time"])){
-                        echo "<p>This service requires two-factor authentication!</p>";
-                        echo "<input type=\"text\" name=\"otp\" placeholder=\"OTP\" required />";
+                        echo "<p>2FA Required!</p>";
+                        echo "<input maxlength=\"6\" style=\"width:60%\" type=\"text\" name=\"otp\" placeholder=\"OTP\" required />";
                 }
                 else {
                         echo "Logged In";
