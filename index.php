@@ -19,11 +19,7 @@ if(isset($_POST["login"])){
             $existing_result = $check_user_stmt->get_result();
             $rows = $existing_result->fetch_all(MYSQLI_ASSOC);
             if(count($rows)==0){
-                echo "<form id=\"register\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);"\" method=\"post\">";
-                echo "<input type=\"email\" name=\"email\" value=\"".$email."\" readonly />";
-                echo "<input type=\"password\" name=\"password\" value=\"".$_POST["password"]."\" readonly />";
-                echo "<input type=\"submit\" name=\"register\" value=\"Register\" />";
-                echo "</form>";
+                echo "<script>confirm('Account not found for the given information. Press OK to create it or Cancel to try again.');</script>";
             }
             else {
                 if(password_verify($_POST["password"], $row["password"])){
