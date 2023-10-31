@@ -6,7 +6,7 @@
                 <p>Login to access Account Dashboard</p>
                 <input type="email" name="email" placeholder="Email" required />
                 <input type="password" name="password" placeholder="Password" required />
-                <button class="g-recaptcha" data-sitekey="<?php echo $env['RECAPTCHA_SITEKEY'];?>" data-callback='onLogin'  data-action='submit' name="login" form="login">Login</button>
+                <button class="g-recaptcha" data-sitekey="<?php echo $env['RECAPTCHA_SITEKEY'];?>" data-callback='onLogin'  data-action='login'>Login</button>
                 <?php
                 foreach($l_errors as $l){
                         echo $l."<br />";
