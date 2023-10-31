@@ -19,7 +19,7 @@ if(isset($_POST["login"])){
             $existing_result = $check_user_stmt->get_result();
             $rows = $existing_result->fetch_all(MYSQLI_ASSOC);
             if(count($rows)){
-                $row = rows[0];
+                $row = $rows[0];
                 if(password_verify($_POST["password"], $row["password"])){
                     $_SESSION["email"] = $row["email"];
                     $_SESSION["time"] = time();
