@@ -96,6 +96,7 @@
      width: 49%;
  }
 
+ #logout>input[type=submit]:hover,
  #login>input[type=submit]:hover {
      border: 3px inset silver;
  }
