@@ -2,18 +2,28 @@
         <!--<div id="ta-icon"><img id="ta-img" src="/ta-logo.png" /></div>-->
         <div id="title">TInyAuth</div>
         <div id="infoline">Key-Based Authentication<br />for the TI-84+ CE</div>
-        <form id="login" action="<?php echo filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL); ?>" method="post">
-                <p>Login to access Account Dashboard</p>
-                <input type="email" name="email" placeholder="Email" required />
-                <input type="password" name="password" placeholder="Password" required />
-                <input type="submit" name="login" value="Login" />
-                <input type="submit" name="login" value="Register" />
-                <?php
+        <?php
+        if(isset($_SESSION["email"])){
+                if (isset($_SESSION["time"])){
+                        echo "Awaiting 2FA";
+                }
+                else {
+                        echo "Logged In";
+                }
+        }
+        else {
+                echo "<form id=\"login\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
+                echo "<p>Login to access Account Dashboard</p>";
+                echo "<input type=\"email\" name=\"email\" placeholder=\"Email\" required />";
+                echo "<input type=\"password\" name=\"password\" placeholder=\"Password\" required />";
+                echo "<input type=\"submit\" name=\"login\" value=\"Login\" />";
+                echo "<input type=\"submit\" name=\"login\" value=\"Register\" />";
                 foreach($l_errors as $l){
                         echo $l."<br />";
                 }
-                ?>
-        </form>
+                echo "</form>";
+        }
+        ?>
         <div style="flex:2;"></div>
         <div id="navigation">
                 <div class="navitem"><a href="/portions/api.php">Documentation</a></div>

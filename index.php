@@ -13,24 +13,22 @@ if(isset($_POST["login"])){
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
         $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
         if (!$conn->connect_error) {
-            $check_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE email=?");
+            $check_user_stmt = $conn->prepare("SELECT email,password FROM credentials WHERE email=?");
             $check_user_stmt->bind_param("s", $email);
             $check_user_stmt->execute();
             $existing_result = $check_user_stmt->get_result();
             $rows = $existing_result->fetch_all(MYSQLI_ASSOC);
-            if(count($rows)==0){
-                echo "<script>confirm('Account not found for the given information. Press OK to create it or Cancel to try again.');</script>";
-            }
-            else {
+            if(count($rows)){
+                $row = rows[0];
                 if(password_verify($_POST["password"], $row["password"])){
-                    load_user($conn, $row["id"]);
-                    header("Refresh:0");
+                    $_SESSION["email"] = $row["email"];
+                    $_SESSION["time"] = time();
                 }
                 else {
-                $l_errors[] = "Invalid password.";
+                    $l_errors[] = "Invalid password.";
                 }
             }
-            
+            else { $l_errors[] = "Account not found."; }
         } else {$l_errors[] = "Database connection failed.";}
     }
 
