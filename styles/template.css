@@ -83,7 +83,8 @@
      padding: 2%;
  }
 
- #login>input {
+ #login>input,
+ #login>button {
      width: 100%;
      background: rgba(0, 0, 0, .1);
      height: 35px;
