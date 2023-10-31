@@ -1,4 +1,5 @@
- if(isset($_POST["l_submit"])){
+<?php
+if(isset($_POST["l_submit"])){
         $l_errors = array();
         $fields = [
             'secret' => $env["RECAPTCHA_SECRET"],
@@ -30,3 +31,5 @@
             } else {$l_errors[] = "Database connection failed.";}
         } else {$l_errors[] = "Recaptcha validation error."; }
     }
+
+?>

@@ -1,3 +1,5 @@
+ 
+ <?php
  if(isset($_POST["r_submit"])){
         $r_errors = array();
         $fields = [
@@ -48,3 +50,4 @@
             $r_errors[] = "Recaptcha validation error.";
         }
     }
+    ?>
