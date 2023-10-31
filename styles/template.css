@@ -77,14 +77,14 @@
  }
 
  #login,
- #acct-ctl {
+ #logout {
      display: block;
      width: 60%;
      margin: 5% auto;
      padding: 2%;
  }
 
- #acct-ctl>input,
+ #logout>input,
  #login>input {
      width: 100%;
      background: rgba(0, 0, 0, .1);

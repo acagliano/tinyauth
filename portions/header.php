@@ -4,7 +4,7 @@
         <div id="infoline">Key-Based Authentication<br />for the TI-84+ CE</div>
         <?php
         if(isset($_SESSION["email"])){
-                echo "<form id=\"acct-ctl\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
+                echo "<form id=\"logout\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                 echo "<input type=\"submit\" name=\"logout\" value=\"Log Out\" />";
                 if (isset($_SESSION["time"])){
                         echo "Awaiting 2FA";
