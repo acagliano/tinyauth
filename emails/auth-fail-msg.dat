@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" style="width:100vw; margin:0; padding:0; outline:0;">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width">
+<title>TInyAuth Account Alert</title>
+<style>
+</style>
+</head>
+<body>
+<table width="100%">
+<tr>
+<td>
+You are receiving this email because you are subscribed to alerts for failed keyfile authentication attempts.
+</td>
+</tr>
+<tr>
+<td>
+Our Service has just blocked an attempt to authenticate your user ID via keyfile with invalid credentials. You may view this recent authentication attempt by logging in to your <a href="https://tinyauth.cagstech.com/account.php">Dashboard</a>.<br />
+<br />
+</td>
+</tr>
+<tr>
+<td>
+If you no longer want to receive these alerts, you may unsubscribe by logging in to your account Dashboard and unchecking the &quot;failed authentication attempts&quot; option under Notification Settings.<br />
+<br />
+</td>
+</tr>
+<tr style="font-style:italic;">
+<td>
+<hr />
+The content of this email is confidential and intended for the recipient specified in message only. It is strictly forbidden to share any part of this message with any third party, without a written consent of the sender. If you received this message by mistake, please reply to this message and follow with its deletion, so that we can ensure such a mistake does not occur in the future.
+</td>
+</tr>
+</table>
+</body>
+</html>
