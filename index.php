@@ -90,7 +90,8 @@ if(isset($_POST["login"])){
     <body>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/header.php"); ?>
         <div id="content">
-            This is some content
+            <br />
+            <p>Have you ever been playing a game on your calculator and thought to yourself &quot;If only I had a secure way to authenticate myself online with this thing&quot;? No? That&apos;s a shame, because that&apos;s what TInyAuth does.</p>
         </div>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/compliance.php"); ?>
     </body>
