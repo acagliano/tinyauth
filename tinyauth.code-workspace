@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "portions/demo"
+		},
+		{
+			"path": "emails"
+		}
+	],
+	"settings": {
+		"GitHooks.hooksDirectory": "/Users/acagliano/Desktop/webroot.local/tinyauth/.git/hooks"
+	}
+}

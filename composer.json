@@ -1,0 +1,10 @@
+{
+    "require": {
+        "fgrosse/phpasn1": "^2.5",
+        "sendgrid/sendgrid": "^8.0",
+        "sendgrid/php-http-client": "~3.10",
+        "spomky-labs/otphp": "^11.2",
+        "paragonie/constant_time_encoding": "^2.6",
+        "phpmailer/phpmailer": "^6.8"
+    }
+}
