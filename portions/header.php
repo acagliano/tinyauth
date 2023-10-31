@@ -9,6 +9,7 @@
                 if (isset($_SESSION["time"])){
                         echo "<p style=\"margin:0 auto; margin-top:20px;\">2FA Required!</p>";
                         echo "<input maxlength=\"6\" style=\"width:60%\" type=\"text\" name=\"otp\" placeholder=\"OTP\" required />";
+                        echo "<input type=\"submit\" name=\"submit-otp\" value=\"Submit OTP\" />";
                 }
                 else {
                         echo "Logged In";
