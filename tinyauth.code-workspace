@@ -11,6 +11,6 @@
 		}
 	],
 	"settings": {
-		"GitHooks.hooksDirectory": "/Users/acagliano/Desktop/webroot.local/tinyauth/.git/hooks"
+		"GitHooks.hooksDirectory": "/Users/acagliano/Sites/tinyauth/.git/hooks"
 	}
 }
