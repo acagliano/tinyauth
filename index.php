@@ -1,16 +1,45 @@
-
 <?php
-
-    use OTPHP\TOTP;
-    use ParagonIE\ConstantTime\Base64;
-    use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\SMTP;
-    use PHPMailer\PHPMailer\Exception;
-    $env = parse_ini_file($_SERVER["DOCUMENT_ROOT"]."/.env");
-    require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
-
-    include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/login.php";
-    include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/send-email.php";
+session_start();
+use OTPHP\TOTP;
+use ParagonIE\ConstantTime\Base64;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+$env = parse_ini_file($_SERVER["DOCUMENT_ROOT"]."/.env");
+require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
+include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/send-email.php";
+if(isset($_POST["login"])){
+        $l_errors = array();
+        $fields = [
+            'secret' => $env["RECAPTCHA_SECRET"],
+            'response' => $_POST["g-recaptcha-response"]
+        ];
+        $postdata = http_build_query($fields);
+        $ch = curl_init();
+        curl_setopt($ch,CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+        curl_setopt($ch,CURLOPT_POST, true);
+        curl_setopt($ch,CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+        $recaptcha_response = json_decode(curl_exec($ch), true);
+        if($recaptcha_response["success"]){
+            $user = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+            $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
+            if (!$conn->connect_error) {
+                $check_user_stmt = $conn->prepare("SELECT id,password FROM credentials WHERE email=?");
+                $check_user_stmt->bind_param("s", $user);
+                $check_user_stmt->execute();
+                $result = $check_user_stmt->get_result();
+                $row = $result->fetch_assoc();
+                if(password_verify($_POST["password"], $row["password"])){
+                    load_user($conn, $row["id"]);
+                    header("Refresh:0");
+                }
+                else {
+                    $l_errors[] = "Invalid password.";
+                }
+            } else {$l_errors[] = "Database connection failed.";}
+        } else {$l_errors[] = "Recaptcha validation error."; }
+    }
 
     function load_user($conn, $id){
         $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE id=?");
@@ -22,7 +51,6 @@
             $_SESSION[$key] = $value;
         }
     }
-    session_start();
     if(isset($_SESSION["id"])){
         include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php";
         //$style_file = "dashboard.css";
