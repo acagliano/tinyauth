@@ -91,6 +91,10 @@
      margin: 5px 0;
  }
 
+ #login>button:hover {
+     border: 3px inset silver;
+ }
+
  #navigation {
      width: 100%;
      height: auto;

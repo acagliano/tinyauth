@@ -1,5 +1,5 @@
 <?php
-if(isset($_POST["l_submit"])){
+if(isset($_POST["login"])){
         $l_errors = array();
         $fields = [
             'secret' => $env["RECAPTCHA_SECRET"],
@@ -13,7 +13,7 @@ if(isset($_POST["l_submit"])){
         curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
         $recaptcha_response = json_decode(curl_exec($ch), true);
         if($recaptcha_response["success"]){
-            $user = filter_input(INPUT_POST, "l_username", FILTER_SANITIZE_EMAIL);
+            $user = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
             $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
             if (!$conn->connect_error) {
                 $check_user_stmt = $conn->prepare("SELECT id,password FROM credentials WHERE email=?");
@@ -21,7 +21,7 @@ if(isset($_POST["l_submit"])){
                 $check_user_stmt->execute();
                 $result = $check_user_stmt->get_result();
                 $row = $result->fetch_assoc();
-                if(password_verify($_POST["l_password"], $row["password"])){
+                if(password_verify($_POST["password"], $row["password"])){
                     load_user($conn, $row["id"]);
                     header("Refresh:0");
                 }
