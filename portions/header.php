@@ -20,4 +20,5 @@
                 <div class="navitem"><a href="/portions/legal.php">Legal Notices</a></div>
                 <div class="navitem" onclick="show_compliances()">Compliance</div>
         </div>
+        <div style="flex:1;"></div>
 </div>
