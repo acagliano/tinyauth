@@ -8,6 +8,12 @@ use PHPMailer\PHPMailer\Exception;
 $env = parse_ini_file($_SERVER["DOCUMENT_ROOT"]."/.env");
 require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/send-email.php";
+
+if(isset($_POST["logout"])){
+    unset($_SESSION);
+    session_destroy();
+}
+
 if(isset($_POST["login"])){
         $l_errors = array();
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
