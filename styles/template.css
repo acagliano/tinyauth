@@ -97,15 +97,18 @@
  }
 
  #register>input,
- #login>input,
- #login>button {
+ #login>input {
      width: 100%;
      background: rgba(0, 0, 0, .1);
      height: 35px;
      margin: 5px 0;
  }
 
- #login>button:hover {
+ #login>input[type=submit] {
+     width: 45%;
+ }
+
+ #login>input[type=submit]:hover {
      border: 3px inset silver;
  }
 
