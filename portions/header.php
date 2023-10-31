@@ -14,6 +14,7 @@
                 }
                 ?>
         </form>
+        <div></div>
         <div id="navigation">
                 <div class="navitem"><a href="/portions/api.php">Documentation</a></div>
                 <div class="navitem"><a href="/portions/legal.php">Legal Notices</a></div>
