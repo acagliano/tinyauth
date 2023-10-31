@@ -126,6 +126,7 @@
      font-family: "Share Tech";
      cursor: pointer;
      cursor: hand;
+     font-size: 20px;
  }
 
  .navitem>a {
