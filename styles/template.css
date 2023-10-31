@@ -166,6 +166,10 @@
      color: white;
  }
 
+ #content>p {
+     margin: 5px 25px;
+ }
+
  #compliances {
      display: none;
      position: absolute;
