@@ -166,7 +166,7 @@
      color: white;
  }
 
- #content>* {
+ #content>*:not(br) {
      margin: 5px 25px;
  }
 
