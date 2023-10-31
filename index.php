@@ -61,22 +61,7 @@ if(isset($_POST["login"])){
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <style>
-            #content {display:flex;
-                flex-direction:row; justify-content:space-around;}
-
-            #content-exp {
-                width:45%; height:100%; display:flex; flex-direction:column; justify-content:flex-start; overflow:auto;
-            }
-            #content-demo-container {display:flex; align-items:center; justify-content:center;}
-            #content-exp>div{
-                background:rgba(0,0,0,.15);
-                font-size:calc(8px + 0.5vw);
-                padding:5px;
-                color:white;
-                margin:4% auto;
-            }
-            #content div .title{color:goldenrod; font-weight:bold; font-size:120%; margin-bottom:5px;}
-            #content>div>p {margin:0 10px;}
+            h3 {color:goldenrod; font-weight:bold; font-size:120%; margin-bottom:5px;}
             #content #content-demo {width:100%; height:auto!important; display:block; margin:auto;}
             @media only screen and (max-width: 600px) {
                 #content {display:block;}
@@ -90,8 +75,10 @@ if(isset($_POST["login"])){
     <body>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/header.php"); ?>
         <div id="content">
-            <br />
+            <br /><br />
             <p>Have you ever been playing a game on your calculator and thought to yourself &quot;If only I had a secure way to authenticate myself online with this thing&quot;? No? That&apos;s a shame, because that&apos;s what TInyAuth does.</p>
+            <h3>Oauth2 Backend</h3>
+            <p>When completed, TInyAuth will implement an Oauth2.0 backend. Users will download a credentialing keyfile from their dashboard which lets their calculator authenticate with TInyAuth on request from a third party application.</p>
         </div>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/compliance.php"); ?>
     </body>
