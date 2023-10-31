@@ -61,7 +61,7 @@ if(isset($_POST["login"])){
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <style>
-            h3 {color:goldenrod; font-weight:bold; font-size:120%; margin-bottom:5px;}
+            h3 {color:goldenrod; font-weight:bold; font-size:120%; margin-bottom:5px; border-bottom:1px solid goldenrod;}
             #content #content-demo {width:100%; height:auto!important; display:block; margin:auto;}
             @media only screen and (max-width: 600px) {
                 #content {display:block;}
