@@ -83,6 +83,17 @@
      padding: 2%;
  }
 
+ #register {
+     display: block;
+     position: absolute;
+     top: 20%;
+     left: 30%;
+     width: 40%;
+     height: auto;
+     border: 2px solid orange;
+     background: rgba(0, 0, 0, .25);
+ }
+
  #login>input,
  #login>button {
      width: 100%;

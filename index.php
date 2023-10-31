@@ -10,21 +10,30 @@ require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/send-email.php";
 if(isset($_POST["login"])){
         $l_errors = array();
-        $user = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+        $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
         $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
         if (!$conn->connect_error) {
-            $check_user_stmt = $conn->prepare("SELECT id,password FROM credentials WHERE email=?");
-            $check_user_stmt->bind_param("s", $user);
+            $check_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE email=?");
+            $check_user_stmt->bind_param("s", $email);
             $check_user_stmt->execute();
-            $result = $check_user_stmt->get_result();
-            $row = $result->fetch_assoc();
-            if(password_verify($_POST["password"], $row["password"])){
-                load_user($conn, $row["id"]);
-                header("Refresh:0");
+            $existing_result = $check_user_stmt->get_result();
+            $rows = $existing_result->fetch_all(MYSQLI_ASSOC);
+            if(count($rows)==0){
+                echo "<form id=\"register\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);"\" method=\"post\">";
+                echo "<input type=\"email\" name=\"email\" value=\"".$email."\" readonly />";
+                echo "<input type=\"password\" name=\"password\" value=\"".$_POST["password"]."\" readonly />";
+                echo "<input type=\"submit\" name=\"register\" value=\"Register\" />";
             }
             else {
+                if(password_verify($_POST["password"], $row["password"])){
+                    load_user($conn, $row["id"]);
+                    header("Refresh:0");
+                }
+                else {
                 $l_errors[] = "Invalid password.";
+                }
             }
+            
         } else {$l_errors[] = "Database connection failed.";}
     }
 
