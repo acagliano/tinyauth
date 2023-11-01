@@ -20,7 +20,9 @@
                         echo "</form>";
                 }
                 else {
-                        echo "Logged In";
+                        echo "<form id=\"settings\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
+                        echo "<p style=\"margin:0 auto; margin-top:20px;\">Welcome ".$SESSION["email"]."!</p>";
+                        echo "</form>";
                 }
         }
         else {
