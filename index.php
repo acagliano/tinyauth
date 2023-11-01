@@ -78,37 +78,35 @@ if(isset($_POST["submit-otp"])){
     $otp_code = filter_input(INPUT_POST, "otp", FILTER_SANITIZE_STRING);
     $otp = TOTP::createFromSecret($_SESSION["otp"]);
     $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
-    if($otp->verify($otp_code)){
-        if($_SESSION["mode"] == "register"){
-            // initialize user information
-            $insert_user_stmt = $conn->prepare("INSERT INTO credentials (email,password,secret_keygen,secret_2fa,secret_creation_ts,administrator,notify_flags) VALUES (?,?,?,?,?,?,?)");
-            $secret_keygen = random_bytes(32);
-            $admin = false;
-            $notify = 0;
-            $insert_user_stmt->bind_param("ssssiii", $_SESSION["email"], $_SESSION["password"], $secret_keygen, $_SESSION["otp"], $_SESSION["time"], $admin, $notify);
-            $insert_user_stmt->execute();
+    if (!$conn->connect_error) {
+        if($otp->verify($otp_code)){
+            if($_SESSION["mode"] == "register"){
+                // initialize user information
+                $insert_user_stmt = $conn->prepare("INSERT INTO credentials (email,password,secret_keygen,secret_2fa,secret_creation_ts,administrator,notify_flags) VALUES (?,?,?,?,?,?,?)");
+                $secret_keygen = random_bytes(32);
+                $admin = false;
+                $notify = 0;
+                $insert_user_stmt->bind_param("ssssiii", $_SESSION["email"], $_SESSION["password"], $secret_keygen, $_SESSION["otp"], $_SESSION["time"], $admin, $notify);
+                $insert_user_stmt->execute();
+            }
+            load_user($_SESSION["email"], $conn);
+            unset($_SESSION["time"]);
         }
+        $conn->close();
     }
-    $conn->close();
-    load_user($_SESSION["email"], $env);
-    unset($_SESSION["time"]);
 }
 
-    function load_user($email, $env){
-        $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
-        if (!$conn->connect_error){
-            $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE email=?");
-            $load_user_stmt->bind_param("s", $email);
-            $load_user_stmt->execute();
-            $result = $load_user_stmt->get_result();
-            $row = $result->fetch_assoc();
-            foreach($row as $key=>$value){
-                $_SESSION[$key] = $value;
-            }
-            $conn->close();
+    function load_user($email, $conn){
+        $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE email=?");
+        $load_user_stmt->bind_param("s", $email);
+        $load_user_stmt->execute();
+        $result = $load_user_stmt->get_result();
+        $row = $result->fetch_assoc();
+        foreach($row as $key=>$value){
+            $_SESSION[$key] = $value;
         }
-
     }
+
     if(isset($_SESSION["id"])){
         include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php";
         //$style_file = "dashboard.css";
