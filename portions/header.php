@@ -32,10 +32,7 @@
                                 echo "<hr />";
                                 echo "<p>Use this QR code to configure TOTP-Based 2FA:<br />
                                 <span style=\"font-style:italic; font-size:85%;\">(compatible with Google2FA, FreeOTP, and others)</span></p>";
-                                echo "<p style=\"width:100%;\">";
-                                echo "<img style=\"float:left;\" src='{$_SESSION["otp-qr"]}' />";
-                                echo "<span style=\"width:60%; text-wrap:wrap;\">".$otp->getSecret()."</span>";
-                                echo "</p>";
+                                echo "<img src='{$_SESSION["otp-qr"]}' />";
                         }
                         echo "</div>";
                 }
