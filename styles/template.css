@@ -115,6 +115,10 @@
      cursor: hand;
  }
 
+ #settings>input[type=submit] {
+     margin-left: 5%;
+ }
+
  #settings>input[type=submit]:hover,
  #totp-form>input[type=submit]:hover,
  #logout>input[type=submit]:hover,
