@@ -6,7 +6,8 @@
         use OTPHP\TOTP;
         if(isset($_SESSION["email"])){
                 echo "<form id=\"logout\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
-                echo "<input style=\"width:60%\" type=\"submit\" name=\"logout\" value=\"Log Out\" />";
+                echo "<h4 style=\"float:left;\">Welcome ".$_SESSION["email"]."!</h4>";
+                echo "<input style=\"float:left; width:auto; margin:0px 5px;\" type=\"submit\" name=\"logout\" value=\"Log Out\" />";
                 echo "</form>";
                 if (isset($_SESSION["time"])){
                          echo "<form id=\"totp-form\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
@@ -22,7 +23,6 @@
                 }
                 else {
                         echo "<div style=\"width:80%; margin:auto; text-align:left;\">";
-                        echo "<h4 style=\"margin:0 auto;\">Welcome ".$_SESSION["email"]."!</h4><br />";
                         echo "<form id=\"newpass\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                         echo "<p>Edit your account details:</p>";
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"New Password\" autocomplete =\"new-password\" required />";
