@@ -82,7 +82,7 @@ if(isset($_POST["submit-otp"])){
     $otp_code = filter_input(INPUT_POST, "otp", FILTER_SANITIZE_STRING);
     $otp = TOTP::createFromSecret($_SESSION["otp"]);
     $otp->setPeriod(120);
-    $otp->setLabel($email);
+    $otp->setLabel($_SESSION["email"]);
     $otp->setIssuer('TInyAuth');
     $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     if (!$conn->connect_error) {
