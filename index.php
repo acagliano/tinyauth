@@ -19,7 +19,7 @@ if(isset($_POST["login"])){
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
         $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
         if (!$conn->connect_error) {
-            $check_user_stmt = $conn->prepare("SELECT email,password FROM credentials WHERE email=?");
+            $check_user_stmt = $conn->prepare("SELECT email,password,secret2fa FROM credentials WHERE email=?");
             $check_user_stmt->bind_param("s", $email);
             $check_user_stmt->execute();
             $existing_result = $check_user_stmt->get_result();
@@ -37,6 +37,29 @@ if(isset($_POST["login"])){
             else { $l_errors[] = "Account not found."; }
         } else {$l_errors[] = "Database connection failed.";}
     }
+
+    if(isset($_POST["register"])){
+        $r_errors = array();
+        $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+        $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
+        if (!$conn->connect_error) {
+            $check_user_stmt = $conn->prepare("SELECT email FROM credentials WHERE email=?");
+            $check_user_stmt->bind_param("s", $email);
+            $check_user_stmt->execute();
+            $existing_result = $check_user_stmt->get_result();
+            $rows = $existing_result->fetch_all(MYSQLI_ASSOC);
+            if(count($rows)){
+                $r_errors[] = "An account already exists for this email.";
+            }
+            else {
+                $otp = TOTP::generate();
+                echo "The OTP secret is: {$otp->getSecret()}\n";
+                die();
+            }
+        }
+        else {$r_errors[] = "Database connection failed.";}
+    }
+
 
     function load_user($conn, $id){
         $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE id=?");

@@ -26,7 +26,7 @@
                 echo "<input type=\"email\" name=\"email\" placeholder=\"Email\" required />";
                 echo "<input type=\"password\" name=\"password\" placeholder=\"Password\" required />";
                 echo "<input type=\"submit\" name=\"login\" value=\"Login\" />";
-                echo "<input type=\"submit\" name=\"login\" value=\"Register\" />";
+                echo "<input type=\"submit\" name=\"register\" value=\"Register\" />";
                 foreach($l_errors as $l){
                         echo $l."<br />";
                 }
