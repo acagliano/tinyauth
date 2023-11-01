@@ -92,7 +92,6 @@
 
 
  #totp-form>input,
- #logout>input,
  #login>input {
      width: 100%;
      background: rgba(0, 0, 0, .1);
@@ -119,6 +118,7 @@
      margin: 5px 0;
  }
 
+ #logout,
  #newpass,
  #getkey {
      margin: 5px 0;
