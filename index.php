@@ -75,6 +75,7 @@ if(isset($_POST["login"])){
 
 
 if(isset($_POST["submit-otp"])){
+    $otp_errors = array();
     $otp_code = filter_input(INPUT_POST, "otp", FILTER_SANITIZE_STRING);
     $otp = TOTP::createFromSecret($_SESSION["otp"]);
     $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
@@ -92,8 +93,10 @@ if(isset($_POST["submit-otp"])){
             load_user($_SESSION["email"], $conn);
             unset($_SESSION["time"]);
         }
+        else { $otp_errors[] = "OTP invalid!"; }
         $conn->close();
     }
+    else {$otp_errors[] = "Error connecting to database!"; }
 }
 
     function load_user($email, $conn){

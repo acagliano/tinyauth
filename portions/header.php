@@ -14,7 +14,10 @@
                         echo "<input style=\"width:60%\" type=\"submit\" name=\"submit-otp\" value=\"Submit OTP\" />";
                         echo "<p style=\"margin:0 auto; margin-top:10px;\">Don&apos;t have a TOTP application set up?</p>";
                         echo "<input style=\"width:60%\" type=\"submit\" name=\"email-otp\" value=\"Email It Instead\" />";
-                         echo "</form>";
+                        echo "</form>";
+                        foreach($otp_errors as $l){
+                                echo $l."<br />";
+                        }
                 }
                 else {
                         echo "Logged In";
@@ -28,6 +31,9 @@
                 echo "<input type=\"submit\" name=\"login\" value=\"Login\" />";
                 echo "<input type=\"submit\" name=\"register\" value=\"Register\" />";
                 foreach($l_errors as $l){
+                        echo $l."<br />";
+                }
+                foreach($r_errors as $l){
                         echo $l."<br />";
                 }
                 echo "</form>";
