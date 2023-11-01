@@ -85,7 +85,7 @@
      padding: 2%;
  }
 
- #totp-form,
+ #totp-form>input,
  #logout>input,
  #login>input {
      width: 100%;
