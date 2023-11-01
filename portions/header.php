@@ -26,7 +26,7 @@
                         echo "<form id=\"newpass\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"New Password\" autocomplete =\"new-password\" required />";
                         echo "<input type=\"submit\" name=\"update-password\" value=\"Update\" />";
-                        echo "</form>";
+                        echo "</form><br />";
                         echo "<form id=\"getkey\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"Keyfile Passphrase\" autocomplete =\"new-password\" />";
                         echo "<input type=\"submit\" name=\"generate-keyfile\" value=\"Generate Keyfile\" />";
