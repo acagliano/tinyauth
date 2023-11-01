@@ -20,9 +20,11 @@
                         echo "</form>";
                 }
                 else {
+                        echo "<div style=\"width:98%; margin:auto;\">";
+                        echo "<h3 style=\"margin:0 auto;\">Welcome ".$_SESSION["email"]."!</h3>";
                         echo "<form id=\"settings\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
-                        echo "<p style=\"margin:0 auto; margin-top:20px;\">Welcome ".$_SESSION["email"]."!</p>";
                         echo "</form>";
+                        echo "</div>";
                 }
         }
         else {
