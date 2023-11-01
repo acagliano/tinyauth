@@ -30,7 +30,8 @@ if(isset($_POST["login"])){
                     $_SESSION["email"] = $row["email"];
                     $_SESSION["time"] = time();
                     $_SESSION["mode"] = "login";
-                    $_SESSION["otp"] = TOTP::createFromSecret($row["secret_2fa"]);
+                    $otp = TOTP::createFromSecret($row["secret_2fa"]);
+                    $_SESSION["otp"] = $otp->getSecret();
                 }
                 else {
                     $l_errors[] = "Invalid password.";
@@ -55,15 +56,16 @@ if(isset($_POST["login"])){
                 $r_errors[] = "An account already exists for this email.";
             }
             else {
-                $_SESSION["otp"] = TOTP::generate();
-                $_SESSION["otp"]->setPeriod(120);
-                $_SESSION["otp"]->setLabel($email);
-                $_SESSION["otp"]->setIssuer('TInyAuth');
+                $otp = TOTP::generate();
+                $otp->setPeriod(120);
+                $otp->setLabel($email);
+                $otp->setIssuer('TInyAuth');
+                $_SESSION["otp"] = $otp->getSecret();
                 $_SESSION["email"] = $email;
                 $_SESSION["time"] = time();
                 $_SESSION["mode"] = "register";
                 $_SESSION["password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);
-                $email_content = '<table width="100%;"><col width="100%" /><td>Welcome to TInyAuth! We are glad you have decided to use this Service!<br /></td><td>You will need to validate your email address before you can complete sign-in. Please use the code below to complete two-factor authentication.<br /></td><td style="color:darkblue; font-size:150%;">'.$_SESSION["otp"]->now().'<br /></td><td>You will need two-factor authentication to access this service in the future as well. You may continue to use your email or you may configure a TOTP application using the information in your dashboard.</td></table>';
+                $email_content = '<table width="100%;"><col width="100%" /><tr><td>Welcome to TInyAuth! We are glad you have decided to use this Service!<br /></td></tr><tr><td>You will need to validate your email address before you can complete sign-in. Please use the code below to complete two-factor authentication.<br /></td></tr><tr><td style="color:darkblue; font-size:150%;">'.$_SESSION["otp"]->now().'<br /></td></tr><tr><td>You will need two-factor authentication to access this service in the future as well. You may continue to use your email or you may configure a TOTP application using the information in your dashboard.</td></tr></table>';
                 send_email($email, "Welcome to TInyAuth!", $email_content, $isHTML=true);
             }
         }
@@ -73,15 +75,15 @@ if(isset($_POST["login"])){
 
 if(isset($_POST["submit-otp"])){
     $otp_code = filter_input(INPUT_POST, "otp", FILTER_SANITIZE_STRING);
-    if($_SESSION["otp"]->verify($otp_code)){
+    $otp = TOTP::createFromSecret($_SESSION["otp"]);
+    if($otp->verify($otp_code)){
         if($_SESSION["mode"] == "register"){
             // initialize user information
             $insert_user_stmt = $conn->prepare("INSERT INTO credentials (email,password,secret_keygen,secret_2fa,secret_creation_ts,administrator,notify_flags) VALUES (?,?,?,?,?,?,?)");
             $secret_keygen = random_bytes(32);
-            $secret_otp = $SESSION["otp"]->getSecret();
             $admin = false;
             $notify = 0;
-            $insert_user_stmt->bind_param("ssssiii", $_SESSION["email"], $_SESSION["password"], $secret_keygen, $secret_otp, $_SESSION["time"], $admin, $notify);
+            $insert_user_stmt->bind_param("ssssiii", $_SESSION["email"], $_SESSION["password"], $secret_keygen, $_SESSION["otp"], $_SESSION["time"], $admin, $notify);
             $insert_user_stmt->execute();
         }
     }
