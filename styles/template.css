@@ -141,7 +141,8 @@
  #navigation {
      width: 100%;
      height: auto;
-     justify-content: flex-end;
+     display: flex;
+     justify-content: space-around;
  }
 
  .navitem {
