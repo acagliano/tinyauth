@@ -143,6 +143,7 @@
      height: auto;
      display: flex;
      justify-content: space-around;
+     align-self: flex-end;
  }
 
  .navitem {
