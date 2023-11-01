@@ -19,10 +19,12 @@
                 }
                 else {
                         echo "<div style=\"width:80%; margin:auto; text-align:left;\">";
-                        echo "<form id=\"newpass\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
-                        echo "<p>Edit your account details:</p>";
+                        echo "<form id=\"logout\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                         echo "<input type=\"email\" value=\"".$_SESSION["email"]."\" readonly />";
                         echo "<input type=\"submit\" name=\"logout\" value=\"Logout\" />";
+                        echo "</form>";
+                        echo "<form id=\"newpass\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
+                        echo "<p>Edit your account details:</p>";
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"New Password\" autocomplete =\"new-password\" required />";
                         echo "<input type=\"submit\" name=\"update-password\" value=\"Update\" />";
                         echo "</form>";
