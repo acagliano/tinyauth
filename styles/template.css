@@ -76,6 +76,10 @@
      text-align: center;
  }
 
+ #header p {
+     margin: 0;
+ }
+
  #totp-form,
  #login {
      display: block;
@@ -84,6 +88,7 @@
      padding: 2%;
      flex: 0;
  }
+
 
  #totp-form>input,
  #logout>input,
