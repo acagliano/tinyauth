@@ -28,7 +28,8 @@
                         echo "</form>";
                         if(isset($_SESSION["otp-qr"])){ 
                                 echo "<br />";
-                                echo "<p>Use this QR code to configure a TOTP 2FA application:</p>";
+                                echo "<p>Use this QR code to configure TOTP-Based 2FA:<br />
+                                <span style=\"font-style:italic; font-size:85%;\">(compatible with Google2FA, FreeOTP, and others)</span></p>";
                                 echo "<img src='{$_SESSION["otp-qr"]}'>"; 
                         }
                         echo "</div>";
