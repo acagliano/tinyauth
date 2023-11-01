@@ -76,6 +76,7 @@
      text-align: center;
  }
 
+ #totp-form,
  #login,
  #logout {
      display: block;
@@ -84,6 +85,7 @@
      padding: 2%;
  }
 
+ #totp-form,
  #logout>input,
  #login>input {
      width: 100%;
