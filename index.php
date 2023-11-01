@@ -108,7 +108,7 @@ if(isset($_POST["submit-otp"])){
 if(isset($_POST["email-otp"])){
     $otp = TOTP::createFromSecret($_SESSION["otp"]);
     $otp->setPeriod(120);
-    $otp->setLabel($email);
+    $otp->setLabel($_SESSION["email"]);
     $otp->setIssuer('TInyAuth');
     $email_content = '<table width="100%;"><col width="100%" /><tr><td></tr><tr><td>You will need to validate your email address before you can complete sign-in. Please use the code below to complete two-factor authentication.<br /><br /></td></tr><tr><td style="color:darkblue; font-size:150%;">'.$otp->now().'<br /><br /></td></tr></table>';
     send_email($_SESSION["email"], "TInyAuth 2FA Code Requested", $email_content, $isHTML=true);
