@@ -94,6 +94,11 @@
      margin: 10px 0;
  }
 
+ #logout {
+     margin: auto;
+     text-align: center;
+ }
+
  #danger {
      margin: 20px 0;
      border-left: 2px solid darkred;
