@@ -68,6 +68,7 @@ if(isset($_POST["login"])){
                 $email_content = '<table width="100%;"><col width="100%" /><tr><td>Welcome to TInyAuth! We are glad you have decided to use this Service!<br /></td></tr><tr><td>You will need to validate your email address before you can complete sign-in. Please use the code below to complete two-factor authentication.<br /></td></tr><tr><td style="color:darkblue; font-size:150%;">'.$otp->now().'<br /></td></tr><tr><td>You will need two-factor authentication to access this service in the future as well. You may continue to use your email or you may configure a TOTP application using the information in your dashboard.</td></tr></table>';
                 send_email($email, "Welcome to TInyAuth!", $email_content, $isHTML=true);
             }
+            $conn->close();
         }
         else {$r_errors[] = "Database connection failed.";}
     }
@@ -76,6 +77,7 @@ if(isset($_POST["login"])){
 if(isset($_POST["submit-otp"])){
     $otp_code = filter_input(INPUT_POST, "otp", FILTER_SANITIZE_STRING);
     $otp = TOTP::createFromSecret($_SESSION["otp"]);
+    $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     if($otp->verify($otp_code)){
         if($_SESSION["mode"] == "register"){
             // initialize user information
@@ -87,6 +89,7 @@ if(isset($_POST["submit-otp"])){
             $insert_user_stmt->execute();
         }
     }
+    $conn->close();
     load_user($_SESSION["email"]);
     unset($_SESSION["time"]);
 }
