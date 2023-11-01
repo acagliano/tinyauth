@@ -99,13 +99,6 @@
      margin: 10px 0;
  }
 
- #logout {
-     width: 60%;
-     display: block;
-     margin: auto;
-     text-align: center;
- }
-
  #danger {
      margin: 20px 0;
      border-left: 2px solid darkred;
