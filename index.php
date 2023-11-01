@@ -98,6 +98,10 @@ if(isset($_POST["submit-otp"])){
                 $insert_user_stmt->execute();
             }
             load_user($_SESSION["email"], $conn);
+            $_SESSION["otp-qr"] = $otp->getQrCodeUri(
+                'https://api.qrserver.com/v1/create-qr-code/?data=[DATA]&size=100x100&ecc=M',
+                '[DATA]'
+            );
             unset($_SESSION["time"]);
         }
         else { $otp_errors[] = "OTP invalid!"; }

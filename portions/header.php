@@ -26,6 +26,7 @@
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"New Password\" autocomplete =\"new-password\" required />";
                         echo "<input type=\"submit\" name=\"update-password\" value=\"Update\" />";
                         echo "</form>";
+                        if(isset($_SESSION["otp-qr"])){ echo "<img src='{$_SESSION["otp-qr"]}'>"; }
                         echo "</div>";
                 }
         }
