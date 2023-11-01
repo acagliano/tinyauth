@@ -19,7 +19,7 @@ if(isset($_POST["login"])){
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
         $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
         if (!$conn->connect_error) {
-            $check_user_stmt = $conn->prepare("SELECT email,password,secret2fa FROM credentials WHERE email=?");
+            $check_user_stmt = $conn->prepare("SELECT id,email,password,secret_2fa FROM credentials WHERE email=?");
             $check_user_stmt->bind_param("s", $email);
             $check_user_stmt->execute();
             $existing_result = $check_user_stmt->get_result();
@@ -29,12 +29,15 @@ if(isset($_POST["login"])){
                 if(password_verify($_POST["password"], $row["password"])){
                     $_SESSION["email"] = $row["email"];
                     $_SESSION["time"] = time();
+                    $_SESSION["mode"] = "login";
+                    $_SESSION["otp"] = TOTP::createFromSecret($row["secret_2fa"]);
                 }
                 else {
                     $l_errors[] = "Invalid password.";
                 }
             }
             else { $l_errors[] = "Account not found."; }
+            $conn->close();
         } else {$l_errors[] = "Database connection failed.";}
     }
 
@@ -43,7 +46,7 @@ if(isset($_POST["login"])){
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
         $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
         if (!$conn->connect_error) {
-            $check_user_stmt = $conn->prepare("SELECT email FROM credentials WHERE email=?");
+            $check_user_stmt = $conn->prepare("SELECT id FROM credentials WHERE email=?");
             $check_user_stmt->bind_param("s", $email);
             $check_user_stmt->execute();
             $existing_result = $check_user_stmt->get_result();
@@ -52,24 +55,54 @@ if(isset($_POST["login"])){
                 $r_errors[] = "An account already exists for this email.";
             }
             else {
-                $otp = TOTP::generate();
-                echo "The OTP secret is: {$otp->getSecret()}\n";
-                die();
+                $_SESSION["otp"] = TOTP::generate();
+                $_SESSION["otp"]->setPeriod(120);
+                $_SESSION["otp"]->setLabel($email);
+                $_SESSION["otp"]->setIssuer('TInyAuth');
+                $_SESSION["email"] = $email;
+                $_SESSION["time"] = time();
+                $_SESSION["mode"] = "register";
+                $_SESSION["password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);
+                $email_content = '<table width="100%;"><col width="100%" /><td>Welcome to TInyAuth! We are glad you have decided to use this Service!<br /></td><td>You will need to validate your email address before you can complete sign-in. Please use the code below to complete two-factor authentication.<br /></td><td style="color:darkblue; font-size:150%;">'.$_SESSION["otp"]->now().'<br /></td><td>You will need two-factor authentication to access this service in the future as well. You may continue to use your email or you may configure a TOTP application using the information in your dashboard.</td></table>';
+                send_email($email, "Welcome to TInyAuth!", $email_content, $isHTML=true);
             }
         }
         else {$r_errors[] = "Database connection failed.";}
     }
 
 
-    function load_user($conn, $id){
-        $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE id=?");
-        $load_user_stmt->bind_param("s", $id);
-        $load_user_stmt->execute();
-        $result = $load_user_stmt->get_result();
-        $row = $result->fetch_assoc();
-        foreach($row as $key=>$value){
-            $_SESSION[$key] = $value;
+if(isset($_POST["submit-otp"])){
+    $otp_code = filter_input(INPUT_POST, "otp", FILTER_SANITIZE_STRING);
+    if($_SESSION["otp"]->verify($otp_code)){
+        if($_SESSION["mode"] == "register"){
+            // initialize user information
+            $insert_user_stmt = $conn->prepare("INSERT INTO credentials (email,password,secret_keygen,secret_2fa,secret_creation_ts,administrator,notify_flags) VALUES (?,?,?,?,?,?,?)");
+            $secret_keygen = random_bytes(32);
+            $secret_otp = $SESSION["otp"]->getSecret();
+            $admin = false;
+            $notify = 0;
+            $insert_user_stmt->bind_param("ssssiii", $_SESSION["email"], $_SESSION["password"], $secret_keygen, $secret_otp, $_SESSION["time"], $admin, $notify);
+            $insert_user_stmt->execute();
         }
+    }
+    load_user($_SESSION["email"]);
+    unset($_SESSION["time"]);
+}
+
+    function load_user($email){
+        $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
+        if (!$conn->connect_error){
+            $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE email=?");
+            $load_user_stmt->bind_param("s", $email);
+            $load_user_stmt->execute();
+            $result = $load_user_stmt->get_result();
+            $row = $result->fetch_assoc();
+            foreach($row as $key=>$value){
+                $_SESSION[$key] = $value;
+            }
+            $conn->close();
+        }
+
     }
     if(isset($_SESSION["id"])){
         include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php";
