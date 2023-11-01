@@ -90,11 +90,11 @@ if(isset($_POST["submit-otp"])){
         }
     }
     $conn->close();
-    load_user($_SESSION["email"]);
+    load_user($_SESSION["email"], $env);
     unset($_SESSION["time"]);
 }
 
-    function load_user($email){
+    function load_user($email, $env){
         $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
         if (!$conn->connect_error){
             $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE email=?");
