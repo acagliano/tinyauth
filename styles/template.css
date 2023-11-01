@@ -106,6 +106,10 @@
      width: 100%;
  }
 
+ #logout {
+     margin-bottom: 10px;
+ }
+
  #danger>input[type=submit] {
      width: 50%;
      margin: 5px 0;
@@ -133,6 +137,7 @@
      cursor: hand;
  }
 
+ #logout>input[type=submit],
  #getkey>input[type=submit],
  #newpass>input[type=submit] {
      margin-left: 5%;
