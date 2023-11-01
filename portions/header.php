@@ -27,6 +27,10 @@
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"New Password\" autocomplete =\"new-password\" required />";
                         echo "<input type=\"submit\" name=\"update-password\" value=\"Update\" />";
                         echo "</form>";
+                        echo "<form id=\"getkey\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
+                        echo "<input type=\"password\" name=\"newpassword\" placeholder=\"Keyfile Passphrase\" autocomplete =\"new-password\" />";
+                        echo "<input type=\"submit\" name=\"generate-keyfile\" value=\"Generate Keyfile\" />";
+                        echo "</form>";
                         echo "<form id=\"danger\">";
                         echo "<input type=\"submit\" name=\"renew-keygen-secret\" value=\"Reset Keygen Secret\" /><br />";
                         echo "<input type=\"submit\" name=\"renew-2fa-secret\" value=\"Reset 2FA Secret\" /><br />";

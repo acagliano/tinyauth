@@ -107,7 +107,8 @@
      margin: 5px 0;
  }
 
- #newpass {
+ #newpass,
+ #getkey {
      margin: 5px 0;
      text-align: left;
  }
@@ -118,6 +119,7 @@
 
  #danger>input[type=submit],
  #newpass>input[type=submit],
+ #getkey>input[type=submit],
  #totp-form>input[type=submit],
  #logout>input[type=submit],
  #logout>input[type=submit],
@@ -130,6 +132,7 @@
      margin-left: 5%;
  }
 
+ #getkey>input[type=submit]:hover,
  #newpass>input[type=submit]:hover,
  #totp-form>input[type=submit]:hover,
  #logout>input[type=submit]:hover,
