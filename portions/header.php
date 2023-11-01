@@ -21,7 +21,7 @@
                 }
                 else {
                         echo "<div style=\"width:98%; margin:auto;\">";
-                        echo "<h3 style=\"margin:0 auto;\">Welcome ".$_SESSION["email"]."!</h3>";
+                        echo "<h2 style=\"margin:0 auto;\">Welcome ".$_SESSION["email"]."!</h2>";
                         echo "<form id=\"settings\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                         echo "</form>";
                         echo "</div>";
