@@ -5,7 +5,9 @@
         <?php
         if(isset($_SESSION["email"])){
                 echo "<form id=\"logout\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
-                echo "<input type=\"submit\" name=\"logout\" value=\"Log Out\" />";
+                echo "<input style=\"width:60%\" type=\"submit\" name=\"logout\" value=\"Log Out\" />";
+                echo "</form>";
+                echo "<form id=\"totp-form\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                 if (isset($_SESSION["time"])){
                         echo "<p style=\"margin:0 auto; margin-top:20px;\">2FA Required!</p>";
                         echo "<input maxlength=\"6\" style=\"width:60%\" type=\"text\" name=\"otp\" placeholder=\"OTP\" required />";
