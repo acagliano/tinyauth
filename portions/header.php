@@ -26,12 +26,14 @@
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"New Password\" autocomplete =\"new-password\" required />";
                         echo "<input type=\"submit\" name=\"update-password\" value=\"Update\" />";
                         echo "</form>";
-                        if(isset($_SESSION["otp-qr"])){ 
-                                echo "<br />";
+                        if(isset($_SESSION["otp-qr"])){
+                                $otp = TOTP::createFromSecret($_SESSION["secret_2fa"]);
+                                echo "<hr />";
                                 echo "<p>Use this QR code to configure TOTP-Based 2FA:<br />
                                 <span style=\"font-style:italic; font-size:85%;\">(compatible with Google2FA, FreeOTP, and others)</span></p>";
                                 echo "<p>";
                                 echo "<img style=\"float:left;\" src='{$_SESSION["otp-qr"]}'>";
+                                echo "<span style=\"\">".$otp->getSecret()."</span>";
                                 echo "</p>";
                         }
                         echo "</div>";
