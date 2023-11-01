@@ -80,7 +80,7 @@
  #login,
  #logout {
      display: block;
-     width: 60%;
+     width: 100%;
      margin: 1% auto;
      padding: 2%;
      flex: 0;
@@ -89,7 +89,7 @@
  #totp-form>input,
  #logout>input,
  #login>input {
-     width: 100%;
+     width: 60%;
      background: rgba(0, 0, 0, .1);
      height: 35px;
      margin: 10px 0;
