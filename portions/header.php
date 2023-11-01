@@ -5,10 +5,6 @@
         <?php
         use OTPHP\TOTP;
         if(isset($_SESSION["email"])){
-                echo "<form id=\"logout\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
-                echo "<h4 style=\"float:left;\">Welcome ".$_SESSION["email"]."!";
-                echo "<input style=\"width:auto; margin:0px 10px;\" type=\"submit\" name=\"logout\" value=\"Log Out\" /></h4>";
-                echo "</form>";
                 if (isset($_SESSION["time"])){
                          echo "<form id=\"totp-form\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                         echo "<p style=\"margin:0 auto; margin-top:20px;\">2FA Required!</p>";
@@ -25,6 +21,8 @@
                         echo "<div style=\"width:80%; margin:auto; text-align:left;\">";
                         echo "<form id=\"newpass\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                         echo "<p>Edit your account details:</p>";
+                        echo "<input type=\"email\" value=\"".$_SESSION["email"]."\" readonly />";
+                        echo "<input type=\"submit\" name=\"logout\" value=\"Logout\" />";
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"New Password\" autocomplete =\"new-password\" required />";
                         echo "<input type=\"submit\" name=\"update-password\" value=\"Update\" />";
                         echo "</form>";
