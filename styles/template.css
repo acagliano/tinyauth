@@ -76,7 +76,7 @@
      text-align: center;
  }
 
- #settings,
+ #newpass,
  #totp-form,
  #login,
  #logout {
@@ -87,7 +87,6 @@
      flex: 0;
  }
 
- #settings>input,
  #totp-form>input,
  #logout>input,
  #login>input {
@@ -98,7 +97,7 @@
  }
 
  #newpass {
-     margin: 10px 0;
+     margin: 5px 0;
      text-align: left;
  }
 
@@ -106,7 +105,7 @@
      width: 49%;
  }
 
- #settings>input[type=submit],
+ #newpass>input[type=submit],
  #totp-form>input[type=submit],
  #logout>input[type=submit],
  #logout>input[type=submit],
@@ -115,11 +114,11 @@
      cursor: hand;
  }
 
- #settings>input[type=submit] {
+ #newpass>input[type=submit] {
      margin-left: 5%;
  }
 
- #settings>input[type=submit]:hover,
+ #newpass>input[type=submit]:hover,
  #totp-form>input[type=submit]:hover,
  #logout>input[type=submit]:hover,
  #logout>input[type=submit]:hover,
