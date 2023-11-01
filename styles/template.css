@@ -101,14 +101,21 @@
      width: 49%;
  }
 
- #settings>input:hover,
- #totp-form>input:hover,
- #logout>input:hover,
+ #settings>input[type=submit],
+ #totp-form>input[type=submit],
+ #logout>input[type=submit],
+ #logout>input[type=submit],
+ #login>input[type=submit] {
+     cursor: pointer;
+     cursor: hand;
+ }
+
+ #settings>input[type=submit]:hover,
+ #totp-form>input[type=submit]:hover,
+ #logout>input[type=submit]:hover,
  #logout>input[type=submit]:hover,
  #login>input[type=submit]:hover {
      border: 3px inset silver;
-     cursor: pointer;
-     cursor: hand;
  }
 
  #navigation {
