@@ -68,7 +68,7 @@ if(isset($_POST["login"])){
                 $_SESSION["time"] = time();
                 $_SESSION["mode"] = "register";
                 $_SESSION["password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);
-                $email_content = '<table width="100%;"><col width="100%" /><tr><td>Welcome to TInyAuth! We are glad you have decided to use this Service!<br /><br /></td></tr><tr><td>You will need to validate your email address before you can complete sign-in. Please use the code below to complete two-factor authentication.<br /><br /></td></tr><tr><td style="color:darkblue; font-size:150%;">'.$otp->now().'<br /><br /></td></tr><tr><td>You will need two-factor authentication to access this service in the future as well. You may continue to use your email or you may configure a TOTP application using the information in your dashboard.</td></tr></table>';
+                $email_content = '<table width="100%;"><col width="100%" /><tr><td>Welcome to TInyAuth! We are glad you have decided to use this Service!<br /><br /></td></tr><tr><td>You will need to validate your email address before you can complete sign-in. Please use the code below to complete two-factor authentication.<br /><br /></td></tr><tr><td style="color:darkblue; font-size:150%;">'.$otp->now().'<br /><br /></td></tr><tr><td>You will need two-factor authentication to access this service in the future as well. You may continue to use your email or you may configure a TOTP application using the QR code visible after completing sign-in.</td></tr></table>';
                 send_email($email, "Welcome to TInyAuth!", $email_content, $isHTML=true);
             }
             $conn->close();

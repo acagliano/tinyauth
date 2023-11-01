@@ -24,10 +24,12 @@
                         echo "<div style=\"width:80%; margin:auto; text-align:left;\">";
                         echo "<h4 style=\"margin:0 auto;\">Welcome ".$_SESSION["email"]."!</h4><br />";
                         echo "<form id=\"newpass\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
+                        echo "<p>Edit your account details:</p>";
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"New Password\" autocomplete =\"new-password\" required />";
                         echo "<input type=\"submit\" name=\"update-password\" value=\"Update\" />";
                         echo "</form>";
                         echo "<form id=\"getkey\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
+                        echo "<p>Generate access tokens for your calculator:</p>";
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"Keyfile Passphrase\" autocomplete =\"new-password\" />";
                         echo "<input type=\"submit\" name=\"generate-keyfile\" value=\"Generate Keyfile\" />";
                         echo "</form>";
