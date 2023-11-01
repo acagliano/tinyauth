@@ -38,6 +38,7 @@
      display: flex;
      flex-direction: column;
      justify-content: flex-start;
+     overflow-y: auto;
  }
 
  #header>* {
@@ -171,6 +172,7 @@
      cursor: hand;
      font-size: 20px;
      background: rgba(0, 0, 0, .2);
+     padding: 5px 0;
  }
 
  .navitem>a {
