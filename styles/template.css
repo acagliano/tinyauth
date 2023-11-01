@@ -76,6 +76,7 @@
      text-align: center;
  }
 
+ #settings,
  #totp-form,
  #login,
  #logout {
@@ -86,6 +87,7 @@
      flex: 0;
  }
 
+ #settings>input,
  #totp-form>input,
  #logout>input,
  #login>input {
