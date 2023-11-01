@@ -97,6 +97,10 @@
      margin: 10px 0;
  }
 
+ #newpass {
+     text-align: left;
+ }
+
  #login>input[type=submit] {
      width: 49%;
  }
