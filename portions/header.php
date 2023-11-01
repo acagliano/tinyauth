@@ -7,18 +7,18 @@
                 echo "<form id=\"logout\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                 echo "<input style=\"width:60%\" type=\"submit\" name=\"logout\" value=\"Log Out\" />";
                 echo "</form>";
-                echo "<form id=\"totp-form\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                 if (isset($_SESSION["time"])){
+                         echo "<form id=\"totp-form\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                         echo "<p style=\"margin:0 auto; margin-top:20px;\">2FA Required!</p>";
                         echo "<input maxlength=\"6\" style=\"width:60%\" type=\"text\" name=\"otp\" placeholder=\"OTP\" required />";
                         echo "<input style=\"width:60%\" type=\"submit\" name=\"submit-otp\" value=\"Submit OTP\" />";
                         echo "<p style=\"margin:0 auto; margin-top:10px;\">Don&apos;t have a TOTP application set up?</p>";
                         echo "<input style=\"width:60%\" type=\"submit\" name=\"email-otp\" value=\"Email It Instead\" />";
+                         echo "</form>";
                 }
                 else {
                         echo "Logged In";
                 }
-                echo "</form>";
         }
         else {
                 echo "<form id=\"login\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
