@@ -20,13 +20,17 @@
                         echo "</form>";
                 }
                 else {
-                        echo "<div style=\"width:98%; margin:auto;\">";
-                        echo "<h4 style=\"margin:0 auto;\">Welcome ".$_SESSION["email"]."!</h4>";
+                        echo "<div style=\"width:98%; margin:auto; text-align:left;\">";
+                        echo "<h4 style=\"margin:0 auto;\">Welcome ".$_SESSION["email"]."!</h4><br />";
                         echo "<form id=\"newpass\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"New Password\" autocomplete =\"new-password\" required />";
                         echo "<input type=\"submit\" name=\"update-password\" value=\"Update\" />";
                         echo "</form>";
-                        if(isset($_SESSION["otp-qr"])){ echo "<img src='{$_SESSION["otp-qr"]}'>"; }
+                        if(isset($_SESSION["otp-qr"])){ 
+                                echo "<br />";
+                                echo "<p>Use this QR code to configure a TOTP 2FA application:</p>";
+                                echo "<img src='{$_SESSION["otp-qr"]}'>"; 
+                        }
                         echo "</div>";
                 }
         }
