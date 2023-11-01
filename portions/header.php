@@ -28,7 +28,7 @@
                         echo "<input type=\"submit\" name=\"update-password\" value=\"Update\" />";
                         echo "</form>";
                         echo "<form id=\"danger\">";
-                        echo "<input type=\"submit\" name=\"renew-keygen-secret\" value=\"Reset Keygen Secret\" />";
+                        echo "<input type=\"submit\" name=\"renew-keygen-secret\" value=\"Reset Keygen Secret\" /><br />";
                         echo "<input type=\"submit\" name=\"renew-2fa-secret\" value=\"Reset 2FA Secret\" />";
                         echo "</form>";
                         if(isset($_SESSION["otp-qr"])){
