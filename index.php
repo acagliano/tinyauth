@@ -93,7 +93,8 @@ if(isset($_POST["submit-otp"])){
                 $secret_keygen = random_bytes(32);
                 $admin = false;
                 $notify = 0;
-                $insert_user_stmt->bind_param("ssssiii", $_SESSION["email"], $_SESSION["password"], $secret_keygen, $_SESSION["otp"], $_SESSION["time"], $admin, $notify);
+                $timestamp = date("Y-m-d H:i:s");
+                $insert_user_stmt->bind_param("ssssiii", $_SESSION["email"], $_SESSION["password"], $secret_keygen, $_SESSION["otp"], $timestamp, $admin, $notify);
                 $insert_user_stmt->execute();
             }
             load_user($_SESSION["email"], $conn);
