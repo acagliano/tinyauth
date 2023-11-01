@@ -31,6 +31,9 @@ if(isset($_POST["login"])){
                     $_SESSION["time"] = time();
                     $_SESSION["mode"] = "login";
                     $otp = TOTP::createFromSecret($row["secret_2fa"]);
+                    $otp->setPeriod(120);
+                    $otp->setLabel($email);
+                    $otp->setIssuer('TInyAuth');
                     $_SESSION["otp"] = $otp->getSecret();
                 }
                 else {
@@ -78,6 +81,9 @@ if(isset($_POST["submit-otp"])){
     $otp_errors = array();
     $otp_code = filter_input(INPUT_POST, "otp", FILTER_SANITIZE_STRING);
     $otp = TOTP::createFromSecret($_SESSION["otp"]);
+    $otp->setPeriod(120);
+    $otp->setLabel($email);
+    $otp->setIssuer('TInyAuth');
     $conn = new mysqli('localhost', $env["SQL_USER"], $env["SQL_PASS"], $env["SQL_DB"]);
     if (!$conn->connect_error) {
         if($otp->verify($otp_code)){
@@ -97,6 +103,15 @@ if(isset($_POST["submit-otp"])){
         $conn->close();
     }
     else {$otp_errors[] = "Error connecting to database!"; }
+}
+
+if(isset($_POST["email-otp"])){
+    $otp = TOTP::createFromSecret($_SESSION["otp"]);
+    $otp->setPeriod(120);
+    $otp->setLabel($email);
+    $otp->setIssuer('TInyAuth');
+    $email_content = '<table width="100%;"><col width="100%" /><tr><td></tr><tr><td>You will need to validate your email address before you can complete sign-in. Please use the code below to complete two-factor authentication.<br /><br /></td></tr><tr><td style="color:darkblue; font-size:150%;">'.$otp->now().'<br /><br /></td></tr></table>';
+    send_email($_SESSION["email"], "TInyAuth 2FA Code Requested", $email_content, $isHTML=true);
 }
 
     function load_user($email, $conn){
