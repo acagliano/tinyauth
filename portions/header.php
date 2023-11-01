@@ -14,7 +14,7 @@
                         echo "<p style=\"margin:0 auto; margin-top:20px;\">2FA Required!</p>";
                         echo "<input maxlength=\"6\" style=\"width:60%\" type=\"text\" name=\"otp\" placeholder=\"OTP\" />";
                         echo "<input style=\"width:60%\" type=\"submit\" name=\"submit-otp\" value=\"Submit OTP\" />";
-                        echo "<p style=\"margin:0 auto; margin-top:10px;\">Don&apos;t have a TOTP application set up?</p>";
+                        echo "<p style=\"margin:0 auto; margin-top:10px;\">Don&apos;t have TOTP set up?</p>";
                         echo "<input style=\"width:60%\" type=\"submit\" name=\"email-otp\" value=\"Email It Instead\" /><br />";
                         foreach($otp_errors as $l){
                                 echo $l."<br />";
