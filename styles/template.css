@@ -154,7 +154,8 @@
      font-family: "Share Tech";
      cursor: pointer;
      cursor: hand;
-     font-size: 22px;
+     font-size: 10px;
+     background: rgba(0, 0, 0, .2);
  }
 
  .navitem>a {
@@ -162,8 +163,8 @@
      color: inherit;
  }
 
- .navitem:not(#login-button, #home-button):hover {
-     background: linear-gradient(to top, rgba(0, 0, 255, .5) 0%, rgba(255, 255, 255, 1) 12%);
+ .navitem:hover {
+     background: rgba(0, 0, 0, .3);
  }
 
  #home-dash-toggle {
