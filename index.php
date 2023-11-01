@@ -125,12 +125,6 @@ if(isset($_POST["email-otp"])){
             $_SESSION[$key] = $value;
         }
     }
-
-    if(isset($_SESSION["id"])){
-        include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php";
-        //$style_file = "dashboard.css";
-        $content_file = "user.php";
-    }
 ?>
 
 <!DOCTYPE html>
