@@ -7,7 +7,7 @@
         if(isset($_SESSION["email"])){
                 echo "<form id=\"logout\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                 echo "<h4 style=\"float:left;\">Welcome ".$_SESSION["email"]."!";
-                echo "<input style=\"float:left; width:auto; margin:0px 5px;\" type=\"submit\" name=\"logout\" value=\"Log Out\" /></h4>";
+                echo "<input style=\"width:auto; margin:0px 10px;\" type=\"submit\" name=\"logout\" value=\"Log Out\" /></h4>";
                 echo "</form>";
                 if (isset($_SESSION["time"])){
                          echo "<form id=\"totp-form\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
