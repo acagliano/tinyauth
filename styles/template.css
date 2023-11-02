@@ -159,7 +159,7 @@
      display: flex;
      justify-content: space-around;
      align-self: flex-end;
-     background: rgba(0, 0, 0, .9);
+     background: rgba(0, 0, 0, 1);
      color: white;
  }
 
@@ -176,6 +176,7 @@
      cursor: hand;
      font-size: 20px;
      padding: 5px 0;
+     background: rgba(255, 255, 255, 0);
  }
 
  #copyright {
@@ -188,7 +189,7 @@
  }
 
  .navitem:hover {
-     background: rgba(0, 0, 0, .8);
+     background: rgba(255, 255, 255, .1);
  }
 
  #home-dash-toggle {
