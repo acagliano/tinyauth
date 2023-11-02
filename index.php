@@ -158,9 +158,9 @@ if(isset($_POST["email-otp"])){
             <br />
             <p>TInyAuth is an application providing a secure means for public-facing services for the TI-84+ CE to authorize users without requiring that users authenticate repeatedly or input credentials. Users authorize their calculators to access their TInyAuth account by downloading a keyfile from their Dashboard which contains a signed access token for their account and sending it to their device. The rest is managed via a secure API that the end user doesn&apos;t need to worry about.</p><br />
             <h3>Secure Keyfiles</h3>
-            <p>Keyfiles are digitally signed by TInyAuth to prevent forgery. The Service&apos;s signing key renews on the 1st of every year, expiring any keys issued the previous year. Users may issue multiple keys against their account if they desire and may supply an encryption passphrase for additional security.</p><br />
-            <h3>Oauth2 Backend</h3>
-            <p>Why reinvent the wheel, right? When complete, TInyAuth will use OAuth2 to manage authorization requests from third parties.</p><br />
+            <p>Keyfiles are digitally signed by TInyAuth to prevent forgery. The Service&apos;s signing key renews on the 1st of every year, expiring any keys issued the previous year. Users may issue multiple keys against their account if they desire and may optionally supply an encryption passphrase for additional security.</p><br />
+            <h3>OAuth2 Backend</h3>
+            <p>Why reinvent the wheel, right? When complete, TInyAuth will use the OAuth2 framework to manage authorization requests from third parties.</p><br />
         </div>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/compliance.php"); ?>
         <div id="navigation">
