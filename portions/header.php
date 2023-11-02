@@ -39,7 +39,6 @@
                         echo "<input type=\"submit\" name=\"renew-2fa-secret\" value=\"Reset 2FA Secret\" /><br />";
                         echo "<input type=\"submit\" name=\"delete-account\" value=\"Delete Account\" />";
                         echo "</form>";
-                        echo "<hr />";
                         if(isset($_SESSION["otp-qr"])){
                                 $otp = TOTP::createFromSecret($_SESSION["secret_2fa"]);
                                 echo "<hr />";
