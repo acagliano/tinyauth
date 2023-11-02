@@ -163,5 +163,12 @@ if(isset($_POST["email-otp"])){
             <p>When completed, TInyAuth will implement an Oauth2.0 backend. Users will download a keyfile from their dashboard which lets their calculator authenticate with TInyAuth on request from a third party application. Upon successful login to TInyAuth, a token will be provided to the third-party application granting access to specified account information.</p><br />
         </div>
         <?php include_once($_SERVER["DOCUMENT_ROOT"]."/portions/compliance.php"); ?>
+        <div id="navigation">
+                <div class="navitem"><a href="/portions/api.php">Documentation</a></div>
+                <div class="navitem"><a href="/portions/legal.php">Legal Notices</a></div>
+                <div class="navitem"><a href="/portions/legal.php">Support</a></div>
+                <div class="navitem" onclick="show_compliances()">Compliance</div>
+                <div>&copy; 2023 - <?php echo date("Y");?> Cags Tech Designs</div>
+        </div>
     </body>
 </html>
