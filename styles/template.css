@@ -160,6 +160,7 @@
      justify-content: space-around;
      align-self: flex-end;
      background: rgba(0, 0, 0, .9);
+     color: white;
  }
 
  .navitem,
