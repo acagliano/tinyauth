@@ -30,7 +30,7 @@
                         echo "<input type=\"submit\" name=\"update-password\" value=\"Update\" />";
                         echo "</form>";
                         echo "<form id=\"getkey\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
-                        echo "<p>Generate access tokens for your calculator:</p>";
+                        echo "<p>Generate access keyfile for your calculator:</p>";
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"Keyfile Passphrase\" autocomplete =\"new-password\" />";
                         echo "<input type=\"submit\" name=\"generate-keyfile\" value=\"Generate Keyfile\" />";
                         echo "</form>";
