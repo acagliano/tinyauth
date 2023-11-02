@@ -168,7 +168,7 @@ if(isset($_POST["email-otp"])){
                 <div class="navitem"><a href="/portions/legal.php">Legal Notices</a></div>
                 <div class="navitem"><a href="/portions/legal.php">Support</a></div>
                 <div class="navitem" onclick="show_compliances()">Compliance</div>
-                <div>&copy; 2023 - <?php echo date("Y");?> Cags Tech Designs</div>
+                <div id="copyright">&copy; 2023 - <?php echo date("Y");?> Cags Tech Designs</div>
         </div>
     </body>
 </html>
