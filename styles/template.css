@@ -174,13 +174,9 @@
      text-align: center;
      cursor: pointer;
      cursor: hand;
-     font-size: 18px;
+     font-size: 14px;
      padding: 5px 0;
      background: rgba(255, 255, 255, 0);
- }
-
- #copyright {
-     font-size: 14px;
  }
 
  .navitem>a {
