@@ -166,7 +166,7 @@
  .navitem,
  #copyright {
      margin: 0;
-     flex: 1;
+     flex: 1 0 auto;
      width: auto;
      justify-content: center;
      align-items: center;
