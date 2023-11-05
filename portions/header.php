@@ -35,7 +35,7 @@
                         echo "<input type=\"password\" name=\"newpassword\" placeholder=\"Keyfile Passphrase\" autocomplete =\"new-password\" />";
                         echo "<input type=\"submit\" name=\"generate-keyfile\" value=\"Generate Keyfile\" />";
                         echo "</form>";
-                        echo "<form id=\"danger\">";
+                        echo "<form id=\"danger\" action=\"".filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL)."\" method=\"post\">";
                         echo "<input type=\"submit\" name=\"renew-keygen-secret\" value=\"Reset Keygen Secret\" onclick=\"return confirm('This will revoke all keyfiles issued under the previous secret. Are you sure?');\" /><br />";
                         echo "<input type=\"submit\" name=\"renew-2fa-secret\" value=\"Reset 2FA Secret\" onclick=\"return confirm('This will require that your TOTP application of choice be reconfigured. Are you sure?');\" /><br />";
                         echo "<input type=\"submit\" name=\"delete-account\" value=\"Delete Account\" onclick=\"return confirm('This action is not reversible. Are you sure?');\" />";
