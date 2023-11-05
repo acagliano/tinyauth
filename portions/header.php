@@ -38,7 +38,7 @@
                         echo "<form id=\"danger\">";
                         echo "<input type=\"submit\" name=\"renew-keygen-secret\" value=\"Reset Keygen Secret\" onclick=\"return confirm('This will revoke all keyfiles issued under the previous secret. Are you sure?');\" /><br />";
                         echo "<input type=\"submit\" name=\"renew-2fa-secret\" value=\"Reset 2FA Secret\" onclick=\"return confirm('This will require that your TOTP application of choice be reconfigured. Are you sure?');\" /><br />";
-                        echo "<input type=\"submit\" name=\"delete-account\" value=\"Delete Account\" />";
+                        echo "<input type=\"submit\" name=\"delete-account\" value=\"Delete Account\" onclick=\"return confirm('This action is not reversible. Are you sure?');\" />";
                         echo "</form>";
                         if(isset($_SESSION["otp-qr"])){
                                 $otp = TOTP::createFromSecret($_SESSION["secret_2fa"]);
