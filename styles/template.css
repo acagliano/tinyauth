@@ -180,7 +180,8 @@
  }
 
  #copyright {
-     background: rgba(255, 255, 255, .25);
+     background: rgba(255, 255, 255, .15);
+     border: 1px solid black;
  }
 
  .navitem>a {
