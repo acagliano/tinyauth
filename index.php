@@ -119,6 +119,10 @@ if(isset($_POST["email-otp"])){
     send_email($_SESSION["email"], "TInyAuth 2FA Code Requested", $email_content, $isHTML=true);
 }
 
+if(isset($_POST["generate-keyfile"])){
+    reuire_once($_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php");
+}
+
     function load_user($email, $conn){
         $load_user_stmt = $conn->prepare("SELECT * FROM credentials WHERE email=?");
         $load_user_stmt->bind_param("s", $email);
