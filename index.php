@@ -48,7 +48,7 @@ if(isset($_POST["generate-keyfile"])){
             $kf_errors[] = "Binary IO error.";
             exit();
         }
-        $output = shell_exec("../convbin/bin/convbin -i $binfile -j bin -o $appvfile -k 8xv -n $fname 2>&1");
+        $output = shell_exec($_SERVER["DOCUMENT_ROOT"]."/convbin/bin/convbin -i $binfile -j bin -o $appvfile -k 8xv -n $fname 2>&1");
         error_log($output);
         if(file_exists($appvfile)){
             ob_clean();
