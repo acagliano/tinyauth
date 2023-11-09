@@ -2,13 +2,13 @@
     use FG\ASN1\Universal\Integer;
     use FG\ASN1\Universal\OctetString;
     use FG\ASN1\Universal\Sequence;
-    require "../vendor/autoload.php";
+    require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 
     use tivars\TIModel;
     use tivars\TIVarFile;
     use tivars\TIVarType;
     use tivars\TIVarTypes;
-    require_once "../ti_vars_lib/src/autoloader.php";
+    require_once $_SERVER["DOCUMENT_ROOT"]."/ti_vars_lib/src/autoloader.php";
 
     if(isset($_POST["generate-calc-auth"])){
         $kf_errors = array();
