@@ -12,7 +12,7 @@
 
     if(isset($_POST["generate-calc-auth"])){
         $kf_errors = array();
-        $privkey_file = "../.secrets/privkey.pem";
+        $privkey_file = $_SERVER["DOCUMENT_ROOT"]."/.secrets/privkey.pem";
         $privkey = openssl_get_privatekey(file_get_contents($privkey_file), $env["SSL_PASS"]);
         if($privkey){
             openssl_sign($_SESSION["id"].$_SESSION["api_secret"], $signature, $privkey, openssl_get_md_methods()[14]);

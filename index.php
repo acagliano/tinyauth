@@ -14,6 +14,10 @@ if(isset($_POST["logout"])){
     session_destroy();
 }
 
+if(isset($_POST["generate-keyfile"])){
+    require_once($_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php");
+}
+
 if(isset($_POST["login"])){
         $l_errors = array();
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
@@ -117,10 +121,6 @@ if(isset($_POST["email-otp"])){
     $otp->setIssuer('TInyAuth');
     $email_content = '<table width="100%;"><col width="100%" /><tr><td></tr><tr><td>You will need to validate your email address before you can complete sign-in. Please use the code below to complete two-factor authentication.<br /><br /></td></tr><tr><td style="color:darkblue; font-size:150%;">'.$otp->now().'<br /><br /></td></tr></table>';
     send_email($_SESSION["email"], "TInyAuth 2FA Code Requested", $email_content, $isHTML=true);
-}
-
-if(isset($_POST["generate-keyfile"])){
-    require_once($_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php");
 }
 
     function load_user($email, $conn){
