@@ -31,7 +31,7 @@ if(isset($_POST["generate-keyfile"])){
     $privkey_file = $_SERVER["DOCUMENT_ROOT"]."/.secrets/privkey.pem";
     $privkey = openssl_get_privatekey(file_get_contents($privkey_file), $env["SSL_PASS"]);
     if($privkey){
-        openssl_sign($_SESSION["id"].$_SESSION["api_secret"], $signature, $privkey, openssl_get_md_methods()[14]);
+        openssl_sign($_SESSION["id"].$_SESSION["secret_keygen"], $signature, $privkey, openssl_get_md_methods()[14]);
         $asn1_userid = new Integer($_SESSION["id"]);
         $asn1_usertoken = new OctetString(bin2hex($signature));
         $asn1_keydata = new Sequence($asn1_userid, $asn1_usertoken);
