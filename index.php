@@ -120,7 +120,7 @@ if(isset($_POST["email-otp"])){
 }
 
 if(isset($_POST["generate-keyfile"])){
-    reuire_once($_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php");
+    require_once($_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php");
 }
 
     function load_user($email, $conn){
