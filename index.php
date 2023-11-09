@@ -5,17 +5,27 @@ use ParagonIE\ConstantTime\Base64;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-$env = parse_ini_file($_SERVER["DOCUMENT_ROOT"]."/.env");
+use FG\ASN1\Universal\Integer;
+use FG\ASN1\Universal\OctetString;
+use FG\ASN1\Universal\Sequence;
 require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
+
+use tivars\TIModel;
+use tivars\TIVarFile;
+use tivars\TIVarType;
+use tivars\TIVarTypes;
+require_once($_SERVER["DOCUMENT_ROOT"]."/ti_vars_lib/src/autoloader.php");
+
+$env = parse_ini_file($_SERVER["DOCUMENT_ROOT"]."/.env");
+
+
 include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/send-email.php";
+include_once($_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php");
+
 
 if(isset($_POST["logout"])){
     unset($_SESSION);
     session_destroy();
-}
-
-if(isset($_POST["generate-keyfile"])){
-    require_once($_SERVER["DOCUMENT_ROOT"]."/scripts/generate-keyfile.php");
 }
 
 if(isset($_POST["login"])){
